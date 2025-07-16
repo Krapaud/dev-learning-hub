@@ -39,14 +39,6 @@
                 <div class="level-info">
                     <h2>Niveau Débutant</h2>
                     <p>Commencez votre aventure dans le développement</p>
-                    {% if current_user.is_authenticated %}
-                    <div class="level-progress">
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: {{ beginner_progress }}%"></div>
-                        </div>
-                        <span>{{ "%.0f"|format(beginner_progress) }}% complété</span>
-                    </div>
-                    {% endif %}
                 </div>
             </div>
             
@@ -275,14 +267,6 @@
                 <div class="level-info">
                     <h2>Niveau Intermédiaire</h2>
                     <p>Approfondissez vos connaissances en programmation</p>
-                    {% if current_user.is_authenticated %}
-                    <div class="level-progress">
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: {{ intermediate_progress }}%"></div>
-                        </div>
-                        <span>{{ "%.0f"|format(intermediate_progress) }}% complété</span>
-                    </div>
-                    {% endif %}
                 </div>
             </div>
             
@@ -418,4 +402,8 @@
         {% endif %}
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/roadmap.js') }}"></script>
 {% endblock %}

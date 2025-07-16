@@ -32,6 +32,16 @@
 }
 
 /* Reset et base */
+html {
+    scroll-behavior: smooth;
+}
+
+*, *::before, *::after {
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -1490,9 +1500,9 @@ body {
     right: 0;
     bottom: 0;
     background: 
-        radial-gradient(circle at 20% 30%, rgba(0, 255, 136, 0.03) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(0, 212, 255, 0.03) 0%, transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.02) 0%, transparent 50%);
+        radial-gradient(circle at 20% 30%, rgba(0, 255, 136, 0.04) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(0, 212, 255, 0.04) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.03) 0%, transparent 50%);
     pointer-events: none;
     z-index: -1;
 }
@@ -1575,23 +1585,9 @@ body {
 
 .roadmap-level {
     position: relative;
-    opacity: 0;
-    animation: slide-in 0.8s ease-out forwards;
-}
-
-.roadmap-level:nth-child(1) { animation-delay: 0.2s; }
-.roadmap-level:nth-child(2) { animation-delay: 0.4s; }
-.roadmap-level:nth-child(3) { animation-delay: 0.6s; }
-
-@keyframes slide-in {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: none;
 }
 
 .roadmap-level::before {
@@ -1950,17 +1946,82 @@ body {
 
 .roadmap-course.completed .course-node {
     border-color: var(--accent-primary);
-    background: rgba(0, 255, 136, 0.1);
+    background: var(--bg-card);
+    box-shadow: 
+        0 12px 40px rgba(0, 255, 136, 0.3),
+        0 0 30px rgba(0, 255, 136, 0.2);
+    animation: success-pulse 3s ease-in-out infinite;
+    opacity: 1;
+    transform: scale(1);
+    filter: none;
+}
+
+@keyframes success-pulse {
+    0%, 100% { 
+        box-shadow: 
+            0 12px 40px rgba(0, 255, 136, 0.3),
+            0 0 30px rgba(0, 255, 136, 0.2);
+        border-color: var(--accent-primary);
+    }
+    50% { 
+        box-shadow: 
+            0 16px 50px rgba(0, 255, 136, 0.4),
+            0 0 40px rgba(0, 255, 136, 0.3);
+        border-color: #22c55e;
+    }
 }
 
 .roadmap-course.in-progress .course-node {
     border-color: var(--accent-warning);
-    background: rgba(251, 191, 36, 0.1);
+    background: var(--bg-card);
+    box-shadow: 
+        0 12px 40px rgba(251, 191, 36, 0.25),
+        0 0 25px rgba(251, 191, 36, 0.15);
+    position: relative;
+    overflow: hidden;
+    opacity: 1;
+    transform: scale(1);
+    filter: none;
+}
+
+.roadmap-course.in-progress .course-node::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        var(--accent-warning), 
+        transparent);
+    animation: progress-sweep 2s ease-in-out infinite;
+}
+
+@keyframes progress-sweep {
+    0% { left: -100%; }
+    100% { left: 100%; }
 }
 
 .roadmap-course.available .course-node {
     border-color: var(--accent-secondary);
-    background: rgba(0, 212, 255, 0.1);
+    background: var(--bg-card);
+    box-shadow: 
+        0 12px 40px rgba(0, 212, 255, 0.25),
+        0 0 25px rgba(0, 212, 255, 0.15);
+    opacity: 1;
+    transform: scale(1);
+    filter: none;
+}
+
+.roadmap-course.locked .course-node {
+    border-color: var(--border-secondary);
+    background: rgba(75, 85, 99, 0.15);
+    opacity: 0.4;
+    transform: scale(0.92);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    filter: grayscale(0.7) blur(1px);
+    pointer-events: none;
 }
 
 .course-connector {
@@ -1968,10 +2029,38 @@ body {
     left: 50%;
     top: -1rem;
     bottom: -1rem;
-    width: 3px;
-    background: var(--border-primary);
+    width: 4px;
+    background: linear-gradient(180deg, 
+        rgba(0, 255, 136, 0.6) 0%, 
+        rgba(0, 212, 255, 0.6) 50%, 
+        rgba(0, 255, 136, 0.6) 100%);
     transform: translateX(-50%);
     z-index: 1;
+    border-radius: 2px;
+    box-shadow: 
+        0 0 15px rgba(0, 255, 136, 0.4),
+        0 0 30px rgba(0, 255, 136, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.course-connector::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: linear-gradient(180deg, 
+        rgba(255, 255, 255, 0.3), 
+        transparent);
+    animation: flow-down 3s ease-in-out infinite;
+}
+
+@keyframes flow-down {
+    0% { transform: translateY(-20px); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(calc(100vh + 20px)); opacity: 0; }
 }
 
 .roadmap-course:first-child .course-connector {
@@ -1985,43 +2074,108 @@ body {
 .course-node {
     background: var(--bg-card);
     border: 2px solid var(--border-primary);
-    border-radius: 16px;
-    padding: 2rem;
+    border-radius: 20px;
+    padding: 2.5rem;
     margin: 0 auto;
-    max-width: 600px;
+    max-width: 650px;
     position: relative;
-    transition: var(--transition-normal);
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    overflow: hidden;
+    opacity: 1;
+    transform: translateZ(0);
+    will-change: transform, opacity, box-shadow;
+}
+
+.course-node::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(0, 255, 136, 0.03) 0%, 
+        transparent 30%, 
+        rgba(0, 212, 255, 0.03) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.course-node::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, 
+        transparent, 
+        rgba(0, 255, 136, 0.1), 
+        transparent, 
+        rgba(0, 212, 255, 0.1), 
+        transparent);
+    border-radius: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
 }
 
 .course-node:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-12px) translateZ(0) scale(1.03);
+    box-shadow: 
+        0 25px 80px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(0, 255, 136, 0.3),
+        0 0 80px rgba(0, 255, 136, 0.15);
+    border-color: var(--accent-primary);
+}
+
+.course-node:hover::before {
+    opacity: 1;
+}
+
+.course-node:hover::after {
+    opacity: 1;
 }
 
 .course-node .course-icon {
-    font-size: 2.5rem;
+    font-size: 3rem;
     text-align: center;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
 }
 
 .course-content h3 {
     color: var(--text-primary);
-    margin-bottom: 0.5rem;
-    font-size: 1.4rem;
+    margin-bottom: 0.8rem;
+    font-size: 1.6rem;
     text-align: center;
+    font-weight: 600;
+    background: linear-gradient(45deg, var(--text-primary), var(--accent-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .course-content p {
     color: var(--text-secondary);
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+    line-height: 1.6;
 }
 
 .course-meta {
     display: flex;
     justify-content: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
     flex-wrap: wrap;
 }
 
@@ -2029,26 +2183,44 @@ body {
 .course-meta .lessons-count {
     display: flex;
     align-items: center;
-    gap: 0.3rem;
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 500;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.course-meta .difficulty:hover,
+.course-meta .lessons-count:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .course-meta .difficulty.beginner {
-    background: rgba(34, 197, 94, 0.2);
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(22, 163, 74, 0.2));
     color: #22c55e;
+    border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
 .course-meta .difficulty.intermediate {
-    background: rgba(251, 191, 36, 0.2);
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.2));
     color: var(--accent-warning);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.course-meta .difficulty.advanced {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.2));
+    color: var(--accent-danger);
+    border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 .course-meta .lessons-count {
-    background: rgba(0, 212, 255, 0.2);
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(56, 189, 248, 0.2));
     color: var(--accent-secondary);
+    border: 1px solid rgba(0, 212, 255, 0.3);
 }
 
 .course-progress-mini {
@@ -2060,18 +2232,62 @@ body {
 }
 
 .progress-bar-mini {
-    width: 150px;
-    height: 6px;
+    width: 200px;
+    height: 8px;
     background: var(--bg-tertiary);
-    border-radius: 3px;
+    border-radius: 4px;
     overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.progress-bar-mini::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.1), 
+        transparent);
+    animation: shimmer 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
 }
 
 .progress-fill-mini {
     height: 100%;
-    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-    border-radius: 3px;
-    transition: width 0.5s ease;
+    background: linear-gradient(90deg, 
+        var(--accent-primary) 0%, 
+        var(--accent-secondary) 50%, 
+        var(--accent-primary) 100%);
+    background-size: 200% 100%;
+    border-radius: 4px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    animation: gradient-flow 3s ease-in-out infinite;
+}
+
+@keyframes gradient-flow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.progress-fill-mini::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 4px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 0 4px 4px 0;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
 }
 
 .course-action,
@@ -2079,37 +2295,72 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
+    padding: 1rem 2rem;
+    border-radius: 25px;
     text-decoration: none;
-    font-weight: 500;
-    transition: var(--transition-fast);
+    font-weight: 600;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     justify-content: center;
     margin: 0 auto;
     display: block;
     width: fit-content;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    border: 1px solid transparent;
+}
+
+.course-action::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.2), 
+        transparent);
+    transition: left 0.5s ease;
+}
+
+.course-action:hover::before {
+    left: 100%;
 }
 
 .course-action {
     background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
     color: var(--bg-primary);
+    box-shadow: 
+        0 8px 25px rgba(0, 255, 136, 0.3),
+        0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .course-action:hover {
-    transform: scale(1.05);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 
+        0 15px 40px rgba(0, 255, 136, 0.4),
+        0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .course-action.locked {
-    background: var(--bg-tertiary);
+    background: linear-gradient(45deg, var(--bg-tertiary), var(--border-primary));
     color: var(--text-muted);
     border: 1px solid var(--border-primary);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    cursor: not-allowed;
+}
+
+.course-action.locked:hover {
+    transform: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .course-requirement {
-    background: rgba(239, 68, 68, 0.1);
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.1));
     color: var(--accent-danger);
     border: 1px solid rgba(239, 68, 68, 0.3);
-    font-size: 0.9rem;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
 }
 
 .completion-badge {
