@@ -577,7 +577,7 @@ function nextProjectStep() {
 
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', () => {
-    const courseId = {{ course.id }};
+    const courseId = {{ course.id|tojson }};
     window.exerciseSystem = new ExerciseSystem(courseId);
 });
 </script>
