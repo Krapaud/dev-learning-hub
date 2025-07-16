@@ -4,6 +4,8 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import os
+import json
+import random
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'dev-learning-hub-secret-key-2024'
@@ -194,6 +196,248 @@ def trophies():
     all_trophies = Trophy.query.all()
     user_trophy_ids = [ut.trophy_id for ut in UserTrophy.query.filter_by(user_id=current_user.id).all()]
     return render_template('trophies.html', trophies=all_trophies, user_trophy_ids=user_trophy_ids)
+
+# ============== ROUTES IA ==============
+
+@app.route('/api/recommendations')
+@login_required
+def get_recommendations():
+    """API pour obtenir des recommandations personnalisées"""
+    # Version simplifiée
+    mock_recommendations = [
+        {
+            'course_id': 1,
+            'course_name': 'JavaScript Avancé',
+            'course_description': 'Développement web moderne avec JavaScript',
+            'course_icon': 'fab fa-js',
+            'course_color': '#f7df1e',
+            'score': 85,
+            'reason': 'Basé sur votre progression en HTML5 et CSS3'
+        },
+        {
+            'course_id': 2,
+            'course_name': 'Python Data Science',
+            'course_description': 'Analyse de données avec Python',
+            'course_icon': 'fab fa-python',
+            'course_color': '#3776ab',
+            'score': 78,
+            'reason': 'Excellent pour étendre vos compétences en programmation'
+        }
+    ]
+    
+    return jsonify({
+        'success': True,
+        'recommendations': mock_recommendations
+    })
+
+@app.route('/api/ai-help')
+@login_required
+def get_ai_help():
+    """API pour obtenir de l'aide IA contextuelle"""
+    lesson_id = request.args.get('lesson_id')
+    question = request.args.get('question', '')
+    
+    if not lesson_id:
+        return jsonify({'success': False, 'error': 'lesson_id required'})
+    
+    # Aide factice pour le moment
+    help_responses = [
+        "Voici une explication détaillée du concept...",
+        "Pour mieux comprendre, voici un exemple pratique...",
+        "Les points clés à retenir sont...",
+        "Cette notion est importante car...",
+    ]
+    
+    response = random.choice(help_responses)
+    
+    return jsonify({
+        'success': True,
+        'help': {
+            'response': response,
+            'examples': ['Exemple 1', 'Exemple 2'],
+            'tips': ['Conseil 1', 'Conseil 2']
+        }
+    })
+
+@app.route('/api/difficulty-analysis')
+@login_required
+def get_difficulty_analysis():
+    """API pour l'analyse des difficultés d'apprentissage"""
+    # Analyse factice basée sur les leçons complétées
+    completed_count = CompletedLesson.query.filter_by(user_id=current_user.id).count()
+    
+    if completed_count > 10:
+        level = 'advanced'
+        strengths = ['Persévérance', 'Logique', 'Rapidité d\'apprentissage']
+        improvements = ['Approfondissement', 'Projets pratiques']
+    elif completed_count > 5:
+        level = 'intermediate'
+        strengths = ['Bases solides', 'Régularité']
+        improvements = ['Pratique', 'Concepts avancés']
+    else:
+        level = 'beginner'
+        strengths = ['Motivation', 'Curiosité']
+        improvements = ['Pratique régulière', 'Consolidation des bases']
+    
+    analysis = {
+        'overall_level': level,
+        'strengths': strengths,
+        'improvements': improvements,
+        'recommendations': [
+            f'Continuez à pratiquer pour atteindre le niveau suivant',
+            f'Concentrez-vous sur : {", ".join(improvements)}',
+            f'Vos forces sont : {", ".join(strengths)}'
+        ]
+    }
+    
+    return jsonify({
+        'success': True,
+        'analysis': analysis
+    })
+
+@app.route('/api/generate-exercise')
+@login_required
+def generate_exercise():
+    """API pour générer un exercice personnalisé"""
+    lesson_id = request.args.get('lesson_id')
+    difficulty = request.args.get('difficulty', 'medium')
+    
+    if not lesson_id:
+        return jsonify({'success': False, 'error': 'lesson_id required'})
+    
+    # Exercices factices selon la difficulté
+    exercises = {
+        'easy': {
+            'content': 'Exercice Facile:\n\nCréez une page HTML simple avec:\n- Un titre h1\n- Un paragraphe\n- Une liste de 3 éléments\n\nBon courage !',
+            'solution': '<!DOCTYPE html>\n<html>\n<head>\n  <title>Ma page</title>\n</head>\n<body>\n  <h1>Titre</h1>\n  <p>Paragraphe</p>\n  <ul>\n    <li>Item 1</li>\n    <li>Item 2</li>\n    <li>Item 3</li>\n  </ul>\n</body>\n</html>'
+        },
+        'medium': {
+            'content': 'Exercice Moyen:\n\nCréez une fonction qui:\n- Prend un tableau en paramètre\n- Retourne la somme des nombres pairs\n- Gère les cas d\'erreur\n\nTestez avec [1,2,3,4,5,6]',
+            'solution': 'function sumEvenNumbers(arr) {\n  if (!Array.isArray(arr)) return 0;\n  return arr.filter(n => n % 2 === 0).reduce((sum, n) => sum + n, 0);\n}\n\nconsole.log(sumEvenNumbers([1,2,3,4,5,6])); // 12'
+        },
+        'hard': {
+            'content': 'Exercice Difficile:\n\nImplémentez un algorithme de tri fusion (merge sort):\n- Fonction récursive\n- Complexité O(n log n)\n- Triez [64, 34, 25, 12, 22, 11, 90]\n\nBonus: Expliquez la complexité',
+            'solution': 'def merge_sort(arr):\n    if len(arr) <= 1:\n        return arr\n    \n    mid = len(arr) // 2\n    left = merge_sort(arr[:mid])\n    right = merge_sort(arr[mid:])\n    \n    return merge(left, right)\n\ndef merge(left, right):\n    result = []\n    i = j = 0\n    \n    while i < len(left) and j < len(right):\n        if left[i] <= right[j]:\n            result.append(left[i])\n            i += 1\n        else:\n            result.append(right[j])\n            j += 1\n    \n    result.extend(left[i:])\n    result.extend(right[j:])\n    return result'
+        }
+    }
+    
+    exercise = exercises.get(difficulty, exercises['medium'])
+    
+    return jsonify({
+        'success': True,
+        'exercise': exercise
+    })
+
+@app.route('/api/chatbot', methods=['POST'])
+@login_required
+def chatbot_api():
+    """API pour le chatbot d'aide"""
+    data = request.get_json()
+    message = data.get('message', '')
+    context = data.get('context', '')
+    
+    if not message:
+        return jsonify({'success': False, 'error': 'message required'})
+    
+    # Réponses de chatbot simples basées sur des mots-clés
+    responses = {
+        'html': "HTML est un langage de balisage pour structurer les pages web. Les balises principales incluent <html>, <head>, <body>, <h1>, <p>, etc.",
+        'css': "CSS permet de styliser vos pages HTML. Vous pouvez définir des couleurs, polices, layout avec des sélecteurs et propriétés.",
+        'python': "Python est un langage de programmation polyvalent. Commencez par apprendre les variables, les fonctions, les boucles et les conditions.",
+        'javascript': "JavaScript rend vos pages web interactives. Vous pouvez manipuler le DOM, gérer les événements et créer des animations.",
+        'shell': "Le terminal/shell vous permet d'interagir avec votre système via des commandes texte. Commandes de base: ls, cd, mkdir, cp, mv.",
+        'aide': "Je suis là pour vous aider ! Posez-moi des questions sur HTML, CSS, JavaScript, Python ou le terminal.",
+        'exercice': "Voulez-vous un exercice pratique ? Je peux générer des exercices adaptés à votre niveau dans différents domaines.",
+        'conseils': "Mes conseils pour apprendre efficacement: pratiquez régulièrement, codez tous les jours, faites des projets personnels, et n'hésitez pas à poser des questions!"
+    }
+    
+    # Trouver une réponse appropriée
+    message_lower = message.lower()
+    response = "Je ne suis pas sûr de comprendre votre question. Pouvez-vous être plus spécifique ? Ou posez-moi des questions sur HTML, CSS, JavaScript, Python ou le terminal."
+    
+    for keyword, answer in responses.items():
+        if keyword in message_lower:
+            response = answer
+            break
+    
+    return jsonify({
+        'success': True,
+        'chatbot_response': {
+            'response': response,
+            'suggestions': [
+                'Comment apprendre plus efficacement ?',
+                'Générez-moi un exercice',
+                'Expliquez-moi les bases du HTML',
+                'Quels sont vos conseils ?'
+            ]
+        }
+    })
+
+@app.route('/ai-dashboard')
+@login_required
+def ai_dashboard():
+    """Dashboard avec les fonctionnalités IA"""
+    # Version simplifiée pour éviter les erreurs de contexte
+    
+    # Recommandations factices pour le moment
+    mock_recommendations = [
+        {
+            'course': {'id': 1, 'name': 'Python Avancé', 'description': 'Programmation Python niveau expert', 'icon': 'fab fa-python', 'color': '#3776ab'},
+            'score': 0.9,
+            'reason': 'Basé sur votre progression en programmation'
+        },
+        {
+            'course': {'id': 2, 'name': 'JavaScript', 'description': 'Développement web dynamique', 'icon': 'fab fa-js', 'color': '#f7df1e'},
+            'score': 0.8,
+            'reason': 'Complément parfait à vos compétences HTML/CSS'
+        }
+    ]
+    
+    # Analyse factice des difficultés
+    mock_difficulty_analysis = {
+        'overall_level': 'intermediate',
+        'strengths': ['HTML5', 'CSS3', 'Logique'],
+        'improvements': ['JavaScript', 'Algorithmique'],
+        'recommendations': [
+            'Pratiquez plus d\'exercices JavaScript',
+            'Explorez les concepts d\'algorithmique',
+            'Participez aux défis de code'
+        ]
+    }
+    
+    # Statistiques utilisateur
+    courses = Course.query.all()
+    completed_lessons = CompletedLesson.query.filter_by(user_id=current_user.id).all()
+    user_trophies = UserTrophy.query.filter_by(user_id=current_user.id).all()
+    
+    total_lessons = Lesson.query.count()
+    completed_count = len(completed_lessons)
+    progress_percentage = (completed_count / total_lessons * 100) if total_lessons > 0 else 0
+    
+    return render_template('ai_dashboard.html', 
+                         courses=courses,
+                         completed_lessons=completed_lessons,
+                         user_trophies=user_trophies,
+                         progress_percentage=progress_percentage,
+                         recommendations=mock_recommendations,
+                         difficulty_analysis=mock_difficulty_analysis)
+
+def get_user_completed_courses(user_id):
+    """Obtient la liste des cours complétés par un utilisateur"""
+    completed_courses = []
+    courses = Course.query.all()
+    
+    for course in courses:
+        total_lessons = len(course.lessons)
+        completed_lessons = CompletedLesson.query.join(Lesson).filter(
+            CompletedLesson.user_id == user_id,
+            Lesson.course_id == course.id
+        ).count()
+        
+        if total_lessons > 0 and completed_lessons == total_lessons:
+            completed_courses.append(course.id)
+    
+    return completed_courses
 
 def check_trophies(user_id):
     user = User.query.get(user_id)
