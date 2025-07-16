@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+
+{% block title %}Administration - GeekSite{% endblock %}
+
+{% block content %}
+<div class="hero" style="margin-bottom: 3rem; border-color: var(--text-accent);">
+    <h1 style="color: var(--text-accent);"><i class="fas fa-crown"></i> Panneau d'Administration</h1>
+    <p>Gestion complète du système et des utilisateurs</p>
+    <div class="code-block" style="max-width: 600px; margin: 2rem auto;">
+        <span style="color: var(--text-accent);">$ sudo -i</span><br>
+        > Accès administrateur confirmé<br>
+        > Privilèges élevés activés<br>
+        > <span style="color: var(--text-primary);">Ready for system management</span>
+    </div>
+</div>
+
+<div class="dashboard-grid" style="margin-bottom: 3rem;">
+    <div class="stats-card">
+        <i class="fas fa-users" style="font-size: 3rem; color: var(--text-primary); margin-bottom: 1rem;"></i>
+        <span class="stats-number">{{ users|length }}</span>
+        <span class="stats-label">Utilisateurs total</span>
+    </div>
+    
+    <div class="stats-card">
+        <i class="fas fa-user-shield" style="font-size: 3rem; color: var(--text-accent); margin-bottom: 1rem;"></i>
+        <span class="stats-number">{{ users|selectattr("is_admin")|list|length }}</span>
+        <span class="stats-label">Administrateurs</span>
+    </div>
+    
+    <div class="stats-card">
+        <i class="fas fa-clock" style="font-size: 3rem; color: var(--text-secondary); margin-bottom: 1rem;"></i>
+        <span class="stats-number">{{ users|selectattr("last_login")|list|length }}</span>
+        <span class="stats-label">Connexions actives</span>
+    </div>
+    
+    <div class="stats-card">
+        <i class="fas fa-database" style="font-size: 3rem; color: #2ed573; margin-bottom: 1rem;"></i>
+        <span class="stats-number">ONLINE</span>
+        <span class="stats-label">Base de données</span>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title" style="color: var(--text-accent);">
+        <i class="fas fa-users-cog"></i> Gestion des utilisateurs
+    </div>
+    
+    <div class="table-container" style="overflow-x: auto;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th><i class="fas fa-hashtag"></i> ID</th>
+                    <th><i class="fas fa-user"></i> Utilisateur</th>
+                    <th><i class="fas fa-envelope"></i> Email</th>
+                    <th><i class="fas fa-shield"></i> Rôle</th>
+                    <th><i class="fas fa-calendar"></i> Inscrit le</th>
+                    <th><i class="fas fa-clock"></i> Dernière connexion</th>
+                    <th><i class="fas fa-cogs"></i> Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>
+                        <strong>{{ user.username }}</strong>
+                        {% if user.id == session.user_id %}
+                            <span class="badge badge-online" style="margin-left: 0.5rem;">VOUS</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        <span class="badge {{ 'badge-admin' if user.is_admin else 'badge-user' }}">
+                            <i class="fas fa-{{ 'crown' if user.is_admin else 'user' }}"></i>
+                            {{ 'Admin' if user.is_admin else 'User' }}
+                        </span>
+                    </td>
+                    <td>{{ user.created_at.strftime('%d/%m/%Y') }}</td>
+                    <td>
+                        {% if user.last_login %}
+                            {{ user.last_login.strftime('%d/%m/%Y %H:%M') }}
+                            <span class="badge badge-online">ACTIF</span>
+                        {% else %}
+                            <span class="badge badge-offline">JAMAIS</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.id != session.user_id %}
+                            <a href="{{ url_for('toggle_admin', user_id=user.id) }}" 
+                               class="btn" 
+                               style="font-size: 0.8rem; padding: 0.3rem 0.6rem; margin: 0.2rem; border-color: var(--text-accent); color: var(--text-accent);"
+                               onclick="return confirm('Modifier les privilèges de {{ user.username }} ?')">
+                                <i class="fas fa-{{ 'user-minus' if user.is_admin else 'user-plus' }}"></i>
+                                {{ 'Retirer admin' if user.is_admin else 'Promouvoir' }}
+                            </a>
+                            
+                            <a href="{{ url_for('delete_user', user_id=user.id) }}" 
+                               class="btn" 
+                               style="font-size: 0.8rem; padding: 0.3rem 0.6rem; margin: 0.2rem; border-color: #ff4757; color: #ff4757;"
+                               onclick="return confirm('Êtes-vous sûr de vouloir supprimer {{ user.username }} ? Cette action est irréversible.')">
+                                <i class="fas fa-trash"></i>
+                                Supprimer
+                            </a>
+                        {% else %}
+                            <span style="color: var(--text-gray); font-style: italic;">
+                                <i class="fas fa-lock"></i> Votre compte
+                            </span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-terminal"></i> Commandes système
+        </div>
+        <div class="code-block">
+            > Commandes administrateur disponibles :<br><br>
+            $ ./user-stats<br>
+            $ ./security-audit<br>
+            $ ./backup-database<br>
+            $ ./system-logs<br>
+            $ ./maintenance-mode
+        </div>
+        <p style="margin-top: 1rem; color: var(--text-gray);">
+            Utilisez ces commandes pour gérer le système de manière avancée.
+        </p>
+    </div>
+    
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-shield-alt"></i> Sécurité
+        </div>
+        <ul style="color: var(--text-white); margin: 1rem 0;">
+            <li style="margin-bottom: 0.5rem;">
+                <i class="fas fa-check" style="color: var(--text-primary);"></i>
+                Authentification sécurisée activée
+            </li>
+            <li style="margin-bottom: 0.5rem;">
+                <i class="fas fa-check" style="color: var(--text-primary);"></i>
+                Mots de passe hashés avec salt
+            </li>
+            <li style="margin-bottom: 0.5rem;">
+                <i class="fas fa-check" style="color: var(--text-primary);"></i>
+                Sessions sécurisées
+            </li>
+            <li style="margin-bottom: 0.5rem;">
+                <i class="fas fa-check" style="color: var(--text-primary);"></i>
+                Contrôle d'accès basé sur les rôles
+            </li>
+        </ul>
+    </div>
+    
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-database"></i> Base de données
+        </div>
+        <div class="code-block">
+            Database: SQLite<br>
+            Tables: users<br>
+            Status: <span style="color: var(--text-primary);">HEALTHY</span><br>
+            Last backup: <span style="color: var(--text-gray);">N/A</span>
+        </div>
+        <button class="btn btn-secondary" style="margin-top: 1rem;" onclick="alert('Fonctionnalité en développement')">
+            <i class="fas fa-download"></i> Sauvegarder
+        </button>
+    </div>
+    
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-chart-line"></i> Statistiques
+        </div>
+        <ul style="color: var(--text-white);">
+            <li>Total utilisateurs: <strong style="color: var(--text-primary);">{{ users|length }}</strong></li>
+            <li>Administrateurs: <strong style="color: var(--text-accent);">{{ users|selectattr("is_admin")|list|length }}</strong></li>
+            <li>Utilisateurs actifs: <strong style="color: var(--text-secondary);">{{ users|selectattr("last_login")|list|length }}</strong></li>
+            <li>Nouveaux cette semaine: <strong style="color: var(--text-primary);">{{ users|length }}</strong></li>
+        </ul>
+    </div>
+</div>
+
+<div class="card" style="border-color: #ff4757; margin-top: 2rem;">
+    <div class="card-title" style="color: #ff4757;">
+        <i class="fas fa-exclamation-triangle"></i> Zone de danger
+    </div>
+    <p style="color: var(--text-gray);">
+        Actions irréversibles qui affectent l'ensemble du système. Utilisez avec précaution.
+    </p>
+    <div style="margin-top: 1rem;">
+        <button class="btn" style="border-color: #ff4757; color: #ff4757; margin: 0.5rem;" onclick="alert('Fonctionnalité en développement')">
+            <i class="fas fa-broom"></i> Nettoyer les logs
+        </button>
+        <button class="btn" style="border-color: #ff4757; color: #ff4757; margin: 0.5rem;" onclick="alert('Fonctionnalité en développement')">
+            <i class="fas fa-tools"></i> Mode maintenance
+        </button>
+        <button class="btn" style="border-color: #ff4757; color: #ff4757; margin: 0.5rem;" onclick="alert('Fonctionnalité en développement')">
+            <i class="fas fa-redo"></i> Réinitialiser système
+        </button>
+    </div>
+</div>
+
+<style>
+.table-container {
+    background: var(--bg-card);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+}
+
+.table tbody tr:hover {
+    background: var(--bg-secondary);
+    transform: scale(1.01);
+    transition: all 0.2s ease;
+}
+
+.badge {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+.card:hover {
+    border-color: var(--text-accent);
+    box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+}
+</style>
+{% endblock %}
