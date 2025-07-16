@@ -1,0 +1,421 @@
+{% extends "base.html" %}
+
+{% block title %}Roadmap d'apprentissage - Dev Learning Hub{% endblock %}
+
+{% block content %}
+<div class="roadmap-container">
+    <div class="roadmap-header">
+        <h1>
+            <i class="fas fa-route"></i>
+            Roadmap d'apprentissage
+        </h1>
+        <p>Suivez votre parcours de développeur avec notre roadmap progressive</p>
+        
+        {% if current_user.is_authenticated %}
+        <div class="roadmap-stats">
+            <div class="roadmap-stat">
+                <span class="stat-number">{{ user_progress.completed_courses }}</span>
+                <span class="stat-label">Cours terminés</span>
+            </div>
+            <div class="roadmap-stat">
+                <span class="stat-number">{{ user_progress.total_lessons_completed }}</span>
+                <span class="stat-label">Leçons complétées</span>
+            </div>
+            <div class="roadmap-stat">
+                <span class="stat-number">{{ "%.0f"|format(user_progress.overall_progress) }}%</span>
+                <span class="stat-label">Progression totale</span>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="roadmap-path">
+        <!-- Niveau Débutant -->
+        <div class="roadmap-level beginner">
+            <div class="level-header">
+                <div class="level-icon">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <div class="level-info">
+                    <h2>Niveau Débutant</h2>
+                    <p>Commencez votre aventure dans le développement</p>
+                    {% if current_user.is_authenticated %}
+                    <div class="level-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: {{ beginner_progress }}%"></div>
+                        </div>
+                        <span>{{ "%.0f"|format(beginner_progress) }}% complété</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="roadmap-courses">
+                <!-- Terminal/Shell -->
+                <div class="roadmap-course {% if current_user.is_authenticated and courses_status.get(1, {}).get('completed') %}completed{% elif current_user.is_authenticated and courses_status.get(1, {}).get('started') %}in-progress{% else %}locked{% endif %}">
+                    <div class="course-connector"></div>
+                    <div class="course-node">
+                        <div class="course-icon">💻</div>
+                        <div class="course-content">
+                            <h3>Shell/Terminal</h3>
+                            <p>Maîtrisez la ligne de commande</p>
+                            <div class="course-meta">
+                                <span class="difficulty beginner">
+                                    <i class="fas fa-signal"></i>
+                                    Débutant
+                                </span>
+                                <span class="lessons-count">
+                                    <i class="fas fa-book"></i>
+                                    5 leçons
+                                </span>
+                            </div>
+                            {% if current_user.is_authenticated %}
+                            <div class="course-progress-mini">
+                                <div class="progress-bar-mini">
+                                    <div class="progress-fill-mini" style="width: {{ courses_status.get(1, {}).get('progress', 0) }}%"></div>
+                                </div>
+                                <span>{{ courses_status.get(1, {}).get('completed_lessons', 0) }}/5</span>
+                            </div>
+                            <a href="{{ url_for('course_detail', course_id=1) }}" class="course-action">
+                                {% if courses_status.get(1, {}).get('completed') %}
+                                    <i class="fas fa-trophy"></i> Terminé
+                                {% elif courses_status.get(1, {}).get('started') %}
+                                    <i class="fas fa-play"></i> Continuer
+                                {% else %}
+                                    <i class="fas fa-rocket"></i> Commencer
+                                {% endif %}
+                            </a>
+                            {% else %}
+                            <a href="{{ url_for('login') }}" class="course-action locked">
+                                <i class="fas fa-lock"></i> Se connecter
+                            </a>
+                            {% endif %}
+                        </div>
+                        {% if current_user.is_authenticated and courses_status.get(1, {}).get('completed') %}
+                        <div class="completion-badge">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- HTML5 -->
+                <div class="roadmap-course {% if current_user.is_authenticated and courses_status.get(2, {}).get('completed') %}completed{% elif current_user.is_authenticated and courses_status.get(2, {}).get('started') %}in-progress{% elif current_user.is_authenticated and courses_status.get(1, {}).get('completed') %}available{% else %}locked{% endif %}">
+                    <div class="course-connector"></div>
+                    <div class="course-node">
+                        <div class="course-icon">🌐</div>
+                        <div class="course-content">
+                            <h3>HTML5</h3>
+                            <p>Structure de vos pages web</p>
+                            <div class="course-meta">
+                                <span class="difficulty beginner">
+                                    <i class="fas fa-signal"></i>
+                                    Débutant
+                                </span>
+                                <span class="lessons-count">
+                                    <i class="fas fa-book"></i>
+                                    4 leçons
+                                </span>
+                            </div>
+                            {% if current_user.is_authenticated %}
+                            <div class="course-progress-mini">
+                                <div class="progress-bar-mini">
+                                    <div class="progress-fill-mini" style="width: {{ courses_status.get(2, {}).get('progress', 0) }}%"></div>
+                                </div>
+                                <span>{{ courses_status.get(2, {}).get('completed_lessons', 0) }}/4</span>
+                            </div>
+                            {% if courses_status.get(1, {}).get('completed') or courses_status.get(2, {}).get('started') %}
+                            <a href="{{ url_for('course_detail', course_id=2) }}" class="course-action">
+                                {% if courses_status.get(2, {}).get('completed') %}
+                                    <i class="fas fa-trophy"></i> Terminé
+                                {% elif courses_status.get(2, {}).get('started') %}
+                                    <i class="fas fa-play"></i> Continuer
+                                {% else %}
+                                    <i class="fas fa-rocket"></i> Commencer
+                                {% endif %}
+                            </a>
+                            {% else %}
+                            <div class="course-requirement">
+                                <i class="fas fa-lock"></i>
+                                Terminez Shell/Terminal d'abord
+                            </div>
+                            {% endif %}
+                            {% else %}
+                            <a href="{{ url_for('login') }}" class="course-action locked">
+                                <i class="fas fa-lock"></i> Se connecter
+                            </a>
+                            {% endif %}
+                        </div>
+                        {% if current_user.is_authenticated and courses_status.get(2, {}).get('completed') %}
+                        <div class="completion-badge">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- CSS3 -->
+                <div class="roadmap-course {% if current_user.is_authenticated and courses_status.get(3, {}).get('completed') %}completed{% elif current_user.is_authenticated and courses_status.get(3, {}).get('started') %}in-progress{% elif current_user.is_authenticated and courses_status.get(2, {}).get('completed') %}available{% else %}locked{% endif %}">
+                    <div class="course-connector"></div>
+                    <div class="course-node">
+                        <div class="course-icon">🎨</div>
+                        <div class="course-content">
+                            <h3>CSS3</h3>
+                            <p>Stylisez vos interfaces</p>
+                            <div class="course-meta">
+                                <span class="difficulty beginner">
+                                    <i class="fas fa-signal"></i>
+                                    Débutant
+                                </span>
+                                <span class="lessons-count">
+                                    <i class="fas fa-book"></i>
+                                    5 leçons
+                                </span>
+                            </div>
+                            {% if current_user.is_authenticated %}
+                            <div class="course-progress-mini">
+                                <div class="progress-bar-mini">
+                                    <div class="progress-fill-mini" style="width: {{ courses_status.get(3, {}).get('progress', 0) }}%"></div>
+                                </div>
+                                <span>{{ courses_status.get(3, {}).get('completed_lessons', 0) }}/5</span>
+                            </div>
+                            {% if courses_status.get(2, {}).get('completed') or courses_status.get(3, {}).get('started') %}
+                            <a href="{{ url_for('course_detail', course_id=3) }}" class="course-action">
+                                {% if courses_status.get(3, {}).get('completed') %}
+                                    <i class="fas fa-trophy"></i> Terminé
+                                {% elif courses_status.get(3, {}).get('started') %}
+                                    <i class="fas fa-play"></i> Continuer
+                                {% else %}
+                                    <i class="fas fa-rocket"></i> Commencer
+                                {% endif %}
+                            </a>
+                            {% else %}
+                            <div class="course-requirement">
+                                <i class="fas fa-lock"></i>
+                                Terminez HTML5 d'abord
+                            </div>
+                            {% endif %}
+                            {% else %}
+                            <a href="{{ url_for('login') }}" class="course-action locked">
+                                <i class="fas fa-lock"></i> Se connecter
+                            </a>
+                            {% endif %}
+                        </div>
+                        {% if current_user.is_authenticated and courses_status.get(3, {}).get('completed') %}
+                        <div class="completion-badge">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Python -->
+                <div class="roadmap-course {% if current_user.is_authenticated and courses_status.get(5, {}).get('completed') %}completed{% elif current_user.is_authenticated and courses_status.get(5, {}).get('started') %}in-progress{% elif current_user.is_authenticated and courses_status.get(1, {}).get('completed') %}available{% else %}locked{% endif %}">
+                    <div class="course-connector"></div>
+                    <div class="course-node">
+                        <div class="course-icon">🐍</div>
+                        <div class="course-content">
+                            <h3>Python</h3>
+                            <p>Langage polyvalent moderne</p>
+                            <div class="course-meta">
+                                <span class="difficulty beginner">
+                                    <i class="fas fa-signal"></i>
+                                    Débutant
+                                </span>
+                                <span class="lessons-count">
+                                    <i class="fas fa-book"></i>
+                                    5 leçons
+                                </span>
+                            </div>
+                            {% if current_user.is_authenticated %}
+                            <div class="course-progress-mini">
+                                <div class="progress-bar-mini">
+                                    <div class="progress-fill-mini" style="width: {{ courses_status.get(5, {}).get('progress', 0) }}%"></div>
+                                </div>
+                                <span>{{ courses_status.get(5, {}).get('completed_lessons', 0) }}/5</span>
+                            </div>
+                            {% if courses_status.get(1, {}).get('completed') or courses_status.get(5, {}).get('started') %}
+                            <a href="{{ url_for('course_detail', course_id=5) }}" class="course-action">
+                                {% if courses_status.get(5, {}).get('completed') %}
+                                    <i class="fas fa-trophy"></i> Terminé
+                                {% elif courses_status.get(5, {}).get('started') %}
+                                    <i class="fas fa-play"></i> Continuer
+                                {% else %}
+                                    <i class="fas fa-rocket"></i> Commencer
+                                {% endif %}
+                            </a>
+                            {% else %}
+                            <div class="course-requirement">
+                                <i class="fas fa-lock"></i>
+                                Terminez Shell/Terminal d'abord
+                            </div>
+                            {% endif %}
+                            {% else %}
+                            <a href="{{ url_for('login') }}" class="course-action locked">
+                                <i class="fas fa-lock"></i> Se connecter
+                            </a>
+                            {% endif %}
+                        </div>
+                        {% if current_user.is_authenticated and courses_status.get(5, {}).get('completed') %}
+                        <div class="completion-badge">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Niveau Intermédiaire -->
+        <div class="roadmap-level intermediate">
+            <div class="level-header">
+                <div class="level-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <div class="level-info">
+                    <h2>Niveau Intermédiaire</h2>
+                    <p>Approfondissez vos connaissances en programmation</p>
+                    {% if current_user.is_authenticated %}
+                    <div class="level-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: {{ intermediate_progress }}%"></div>
+                        </div>
+                        <span>{{ "%.0f"|format(intermediate_progress) }}% complété</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="roadmap-courses">
+                <!-- Langage C -->
+                <div class="roadmap-course {% if current_user.is_authenticated and courses_status.get(4, {}).get('completed') %}completed{% elif current_user.is_authenticated and courses_status.get(4, {}).get('started') %}in-progress{% elif current_user.is_authenticated and beginner_completed %}available{% else %}locked{% endif %}">
+                    <div class="course-connector"></div>
+                    <div class="course-node">
+                        <div class="course-icon">⚡</div>
+                        <div class="course-content">
+                            <h3>Langage C</h3>
+                            <p>Fondamentaux de la programmation</p>
+                            <div class="course-meta">
+                                <span class="difficulty intermediate">
+                                    <i class="fas fa-signal"></i>
+                                    Intermédiaire
+                                </span>
+                                <span class="lessons-count">
+                                    <i class="fas fa-book"></i>
+                                    5 leçons
+                                </span>
+                            </div>
+                            {% if current_user.is_authenticated %}
+                            <div class="course-progress-mini">
+                                <div class="progress-bar-mini">
+                                    <div class="progress-fill-mini" style="width: {{ courses_status.get(4, {}).get('progress', 0) }}%"></div>
+                                </div>
+                                <span>{{ courses_status.get(4, {}).get('completed_lessons', 0) }}/5</span>
+                            </div>
+                            {% if beginner_completed or courses_status.get(4, {}).get('started') %}
+                            <a href="{{ url_for('course_detail', course_id=4) }}" class="course-action">
+                                {% if courses_status.get(4, {}).get('completed') %}
+                                    <i class="fas fa-trophy"></i> Terminé
+                                {% elif courses_status.get(4, {}).get('started') %}
+                                    <i class="fas fa-play"></i> Continuer
+                                {% else %}
+                                    <i class="fas fa-rocket"></i> Commencer
+                                {% endif %}
+                            </a>
+                            {% else %}
+                            <div class="course-requirement">
+                                <i class="fas fa-lock"></i>
+                                Terminez tous les cours débutants
+                            </div>
+                            {% endif %}
+                            {% else %}
+                            <a href="{{ url_for('login') }}" class="course-action locked">
+                                <i class="fas fa-lock"></i> Se connecter
+                            </a>
+                            {% endif %}
+                        </div>
+                        {% if current_user.is_authenticated and courses_status.get(4, {}).get('completed') %}
+                        <div class="completion-badge">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projets et Spécialisations -->
+        <div class="roadmap-level advanced">
+            <div class="level-header">
+                <div class="level-icon">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <div class="level-info">
+                    <h2>Projets & Spécialisations</h2>
+                    <p>Mettez en pratique vos compétences</p>
+                    {% if current_user.is_authenticated %}
+                    <div class="level-status">
+                        {% if intermediate_completed %}
+                            <span class="available">
+                                <i class="fas fa-unlock"></i>
+                                Disponible
+                            </span>
+                        {% else %}
+                            <span class="locked">
+                                <i class="fas fa-lock"></i>
+                                Bientôt disponible
+                            </span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="roadmap-courses">
+                <div class="coming-soon">
+                    <div class="coming-soon-content">
+                        <i class="fas fa-tools"></i>
+                        <h3>Projets pratiques à venir</h3>
+                        <p>Site web personnel, applications console, scripts d'automatisation...</p>
+                        {% if current_user.is_authenticated and intermediate_completed %}
+                            <span class="status ready">Vous êtes prêt pour cette étape !</span>
+                        {% else %}
+                            <span class="status pending">Terminez d'abord les niveaux précédents</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="roadmap-actions">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i>
+            Retour au dashboard
+        </a>
+        
+        {% if current_user.is_authenticated %}
+        <div class="next-step">
+            <h3><i class="fas fa-compass"></i> Prochaine étape recommandée</h3>
+            {% if next_course %}
+            <div class="recommendation">
+                <div class="rec-course">
+                    <span class="rec-icon">{{ next_course.icon }}</span>
+                    <div class="rec-info">
+                        <strong>{{ next_course.name }}</strong>
+                        <p>{{ next_course.description }}</p>
+                    </div>
+                    <a href="{{ url_for('course_detail', course_id=next_course.id) }}" class="btn btn-primary">
+                        <i class="fas fa-play"></i>
+                        Commencer
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <p>🎉 Félicitations ! Vous avez terminé tous les cours disponibles !</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -469,6 +469,81 @@ def complete_lesson(lesson_id):
         'new_trophies': [{'name': t.name, 'icon': t.icon} for t in new_trophies]
     })
 
+@app.route('/roadmap')
+def roadmap():
+    if not current_user.is_authenticated:
+        # Version publique de la roadmap
+        courses = session.query(Course).all()
+        return render_template('roadmap.html', courses=courses)
+    
+    # Version personnalisée pour l'utilisateur connecté
+    courses = session.query(Course).all()
+    courses_status = {}
+    
+    # Calculer le statut de chaque cours
+    for course in courses:
+        course_lessons = session.query(Lesson).filter_by(course_id=course.id).count()
+        course_completed_lessons = session.query(UserProgress).join(Lesson).filter(
+            UserProgress.user_id == current_user.id,
+            UserProgress.completed == True,
+            Lesson.course_id == course.id
+        ).count()
+        
+        progress_percentage = (course_completed_lessons / course_lessons * 100) if course_lessons > 0 else 0
+        
+        courses_status[course.id] = {
+            'progress': progress_percentage,
+            'completed_lessons': course_completed_lessons,
+            'total_lessons': course_lessons,
+            'completed': progress_percentage == 100,
+            'started': course_completed_lessons > 0
+        }
+    
+    # Calculer les progressions par niveau
+    beginner_courses = [1, 2, 3, 5]  # Shell, HTML, CSS, Python
+    intermediate_courses = [4]  # C
+    
+    beginner_progress = sum(courses_status.get(cid, {}).get('progress', 0) for cid in beginner_courses) / len(beginner_courses)
+    intermediate_progress = sum(courses_status.get(cid, {}).get('progress', 0) for cid in intermediate_courses) / len(intermediate_courses)
+    
+    # Vérifier si les niveaux sont complétés
+    beginner_completed = all(courses_status.get(cid, {}).get('completed', False) for cid in beginner_courses)
+    intermediate_completed = all(courses_status.get(cid, {}).get('completed', False) for cid in intermediate_courses)
+    
+    # Statistiques utilisateur
+    completed_lessons = session.query(UserProgress).filter_by(user_id=current_user.id, completed=True).count()
+    total_lessons = session.query(Lesson).count()
+    completed_courses = sum(1 for status in courses_status.values() if status.get('completed', False))
+    
+    user_progress = {
+        'completed_courses': completed_courses,
+        'total_lessons_completed': completed_lessons,
+        'overall_progress': (completed_lessons / total_lessons * 100) if total_lessons > 0 else 0
+    }
+    
+    # Déterminer le prochain cours recommandé
+    next_course = None
+    if not courses_status.get(1, {}).get('completed', False):
+        next_course = session.get(Course, 1)  # Shell
+    elif not courses_status.get(2, {}).get('completed', False):
+        next_course = session.get(Course, 2)  # HTML
+    elif not courses_status.get(3, {}).get('completed', False):
+        next_course = session.get(Course, 3)  # CSS
+    elif not courses_status.get(5, {}).get('completed', False):
+        next_course = session.get(Course, 5)  # Python
+    elif beginner_completed and not courses_status.get(4, {}).get('completed', False):
+        next_course = session.get(Course, 4)  # C
+    
+    return render_template('roadmap.html',
+                         courses=courses,
+                         courses_status=courses_status,
+                         user_progress=user_progress,
+                         beginner_progress=beginner_progress,
+                         intermediate_progress=intermediate_progress,
+                         beginner_completed=beginner_completed,
+                         intermediate_completed=intermediate_completed,
+                         next_course=next_course)
+
 @app.route('/trophies')
 @login_required
 def trophies():
