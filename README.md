@@ -1,3 +1,11 @@
+# 🚀 Dev Learning Hub
+
+**Plateforme d'apprentissage gamifiée pour la programmation avec un thème cyberpunk Matrix**
+
+[![Status](https://img.shields.io/badge/status-active-brightgreen.svg)](https://github.com/Krapaud/dev-learning-hub)
+[![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://python.org)
+[![Flask](https://img.shields.io/badge/flask-2.3.3-green.svg)](https://flask.palletsprojects.com)
+
 ## ✨ Fonctionnalités
 
 ### 🎮 Gamification

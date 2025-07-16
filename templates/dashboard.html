@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Dev Learning Hub{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>
+            <i class="fas fa-chart-line"></i>
+            Tableau de Bord
+        </h1>
+        <p>Bienvenue, <span class="username-highlight">{{ current_user.username }}</span> !</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon points">
+                <i class="fas fa-star"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ current_user.total_points }}</h3>
+                <p>Points totaux</p>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon level">
+                <i class="fas fa-level-up-alt"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ current_user.level }}</h3>
+                <p>Niveau actuel</p>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon lessons">
+                <i class="fas fa-book"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ completed_lessons }}/{{ total_lessons }}</h3>
+                <p>Leçons complétées</p>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon courses">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ completed_courses }}/{{ courses|length }}</h3>
+                <p>Cours terminés</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="progress-section">
+        <h2>
+            <i class="fas fa-chart-bar"></i>
+            Progression générale
+        </h2>
+        <div class="overall-progress">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ (completed_lessons / total_lessons * 100) if total_lessons > 0 else 0 }}%"></div>
+            </div>
+            <span class="progress-text">{{ "%.1f"|format((completed_lessons / total_lessons * 100) if total_lessons > 0 else 0) }}% complété</span>
+        </div>
+    </div>
+
+    <div class="courses-section">
+        <h2>
+            <i class="fas fa-code"></i>
+            Mes Cours
+        </h2>
+        <div class="courses-grid">
+            {% for course_data in courses %}
+            <div class="course-card dashboard" style="--course-color: {{ course_data.course.color }}">
+                <div class="course-header">
+                    <div class="course-icon">{{ course_data.course.icon }}</div>
+                    <h3>{{ course_data.course.name }}</h3>
+                </div>
+                
+                <div class="course-progress">
+                    <div class="progress-info">
+                        <span>{{ course_data.completed_lessons }}/{{ course_data.total_lessons }} leçons</span>
+                        <span>{{ "%.0f"|format(course_data.progress) }}%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{ course_data.progress }}%"></div>
+                    </div>
+                </div>
+                
+                <div class="course-actions">
+                    <a href="{{ url_for('course_detail', course_id=course_data.course.id) }}" class="btn btn-primary">
+                        {% if course_data.progress == 100 %}
+                            <i class="fas fa-check"></i>
+                            Réviser
+                        {% elif course_data.progress > 0 %}
+                            <i class="fas fa-play"></i>
+                            Continuer
+                        {% else %}
+                            <i class="fas fa-rocket"></i>
+                            Commencer
+                        {% endif %}
+                    </a>
+                </div>
+                
+                {% if course_data.progress == 100 %}
+                <div class="completion-badge">
+                    <i class="fas fa-crown"></i>
+                    Terminé !
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="level-progress">
+        <h2>
+            <i class="fas fa-trophy"></i>
+            Progression vers le niveau {{ current_user.level + 1 }}
+        </h2>
+        <div class="level-bar-container">
+            {% set next_level_points = (current_user.level * 100) %}
+            {% set current_level_progress = current_user.total_points - ((current_user.level - 1) * 100) %}
+            {% set progress_percentage = (current_level_progress / 100 * 100) if current_user.level < 50 else 100 %}
+            
+            <div class="level-bar">
+                <div class="level-fill" style="width: {{ progress_percentage }}%"></div>
+            </div>
+            <div class="level-info">
+                <span>{{ current_level_progress }}/100 points</span>
+                {% if current_user.level < 50 %}
+                    <span>{{ 100 - current_level_progress }} points restants</span>
+                {% else %}
+                    <span>Niveau maximum atteint !</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="quick-actions">
+        <h2>
+            <i class="fas fa-bolt"></i>
+            Actions rapides
+        </h2>
+        <div class="actions-grid">
+            <a href="{{ url_for('trophies') }}" class="action-card">
+                <i class="fas fa-trophy"></i>
+                <span>Voir mes trophées</span>
+            </a>
+            <a href="#" class="action-card" onclick="showNextLesson()">
+                <i class="fas fa-play"></i>
+                <span>Prochaine leçon</span>
+            </a>
+            <a href="#" class="action-card">
+                <i class="fas fa-chart-pie"></i>
+                <span>Statistiques détaillées</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+function showNextLesson() {
+    // Logique pour trouver et afficher la prochaine leçon à faire
+    alert('Fonctionnalité en cours de développement !');
+}
+</script>
+{% endblock %}

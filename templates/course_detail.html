@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}{{ course.name }} - Dev Learning Hub{% endblock %}
+
+{% block content %}
+<div class="course-detail-container">
+    <div class="course-header" style="--course-color: {{ course.color }}">
+        <div class="course-info">
+            <div class="course-icon-large">{{ course.icon }}</div>
+            <div class="course-details">
+                <h1>{{ course.name }}</h1>
+                <p class="course-description">{{ course.description }}</p>
+                <div class="course-meta">
+                    <span class="difficulty {{ course.difficulty.lower() }}">
+                        <i class="fas fa-signal"></i>
+                        {{ course.difficulty }}
+                    </span>
+                    <span class="lessons-count">
+                        <i class="fas fa-book"></i>
+                        {{ lessons|length }} leçons
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="course-progress-summary">
+            {% set completed_count = user_progress.values() | select | list | length %}
+            {% set progress_percentage = (completed_count / lessons|length * 100) if lessons|length > 0 else 0 %}
+            
+            <div class="progress-circle">
+                <svg viewBox="0 0 36 36" class="circular-chart">
+                    <path class="circle-bg" d="M18 2.0845
+                        a 15.9155 15.9155 0 0 1 0 31.831
+                        a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    <path class="circle" stroke-dasharray="{{ progress_percentage }}, 100" d="M18 2.0845
+                        a 15.9155 15.9155 0 0 1 0 31.831
+                        a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    <text x="18" y="20.35" class="percentage">{{ "%.0f"|format(progress_percentage) }}%</text>
+                </svg>
+            </div>
+            
+            <div class="progress-info">
+                <span>{{ completed_count }}/{{ lessons|length }} leçons</span>
+                {% if progress_percentage == 100 %}
+                    <span class="completed-badge">
+                        <i class="fas fa-crown"></i>
+                        Cours terminé !
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="lessons-section">
+        <h2>
+            <i class="fas fa-list"></i>
+            Leçons du cours
+        </h2>
+        
+        <div class="lessons-list">
+            {% for lesson in lessons %}
+            <div class="lesson-card {% if user_progress[lesson.id] %}completed{% endif %}">
+                <div class="lesson-number">
+                    {% if user_progress[lesson.id] %}
+                        <i class="fas fa-check"></i>
+                    {% else %}
+                        {{ lesson.order }}
+                    {% endif %}
+                </div>
+                
+                <div class="lesson-content">
+                    <h3>{{ lesson.title }}</h3>
+                    <p>{{ lesson.content[:100] }}{% if lesson.content|length > 100 %}...{% endif %}</p>
+                    
+                    <div class="lesson-meta">
+                        <span class="points-reward">
+                            <i class="fas fa-star"></i>
+                            +{{ lesson.points_reward }} points
+                        </span>
+                        {% if user_progress[lesson.id] %}
+                            <span class="completed-indicator">
+                                <i class="fas fa-check-circle"></i>
+                                Complétée
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="lesson-actions">
+                    <a href="{{ url_for('lesson_detail', lesson_id=lesson.id) }}" 
+                       class="btn {% if user_progress[lesson.id] %}btn-secondary{% else %}btn-primary{% endif %}">
+                        {% if user_progress[lesson.id] %}
+                            <i class="fas fa-eye"></i>
+                            Réviser
+                        {% else %}
+                            <i class="fas fa-play"></i>
+                            Commencer
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="course-actions">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i>
+            Retour au dashboard
+        </a>
+        
+        {% if progress_percentage < 100 %}
+            {% set next_lesson = lessons | selectattr('id', 'in', user_progress.keys() | reject | list) | first %}
+            {% if next_lesson %}
+                <a href="{{ url_for('lesson_detail', lesson_id=next_lesson.id) }}" class="btn btn-primary">
+                    <i class="fas fa-play"></i>
+                    Prochaine leçon
+                </a>
+            {% endif %}
+        {% else %}
+            <div class="completion-message">
+                <i class="fas fa-trophy"></i>
+                <span>Félicitations ! Vous avez terminé ce cours !</span>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+
+{% block title %}{{ lesson.title }} - Dev Learning Hub{% endblock %}
+
+{% block content %}
+<div class="lesson-container">
+    <div class="lesson-header">
+        <div class="lesson-nav">
+            <a href="{{ url_for('course_detail', course_id=lesson.course_id) }}" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Retour au cours
+            </a>
+            <span class="lesson-path">
+                {{ lesson.course.name }} > Leçon {{ lesson.order }}
+            </span>
+        </div>
+        
+        <div class="lesson-title-section">
+            <h1>{{ lesson.title }}</h1>
+            <div class="lesson-meta">
+                <span class="points-reward">
+                    <i class="fas fa-star"></i>
+                    +{{ lesson.points_reward }} points
+                </span>
+                {% if completed %}
+                    <span class="completed-badge">
+                        <i class="fas fa-check-circle"></i>
+                        Complétée
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="lesson-content">
+        <div class="content-section">
+            <h2><i class="fas fa-book-open"></i> Contenu de la leçon</h2>
+            <div class="lesson-text">
+                {{ lesson.content }}
+            </div>
+            
+            <!-- Contenu spécifique selon le cours -->
+            {% if lesson.course.name == "Shell/Terminal" %}
+                <div class="code-examples">
+                    <h3><i class="fas fa-terminal"></i> Exemples de commandes</h3>
+                    {% if lesson.order == 1 %}
+                        <div class="code-block">
+                            <code>
+# Afficher le répertoire courant<br>
+pwd<br><br>
+# Lister les fichiers<br>
+ls<br>
+ls -la<br><br>
+# Afficher l'aide d'une commande<br>
+man ls
+                            </code>
+                        </div>
+                    {% elif lesson.order == 2 %}
+                        <div class="code-block">
+                            <code>
+# Changer de répertoire<br>
+cd /home/user<br>
+cd ..<br>
+cd ~<br><br>
+# Créer un répertoire<br>
+mkdir nouveau_dossier<br><br>
+# Afficher l'arborescence<br>
+tree
+                            </code>
+                        </div>
+                    {% endif %}
+                </div>
+            {% elif lesson.course.name == "HTML5" %}
+                <div class="code-examples">
+                    <h3><i class="fas fa-code"></i> Exemples HTML</h3>
+                    {% if lesson.order == 1 %}
+                        <div class="code-block">
+                            <code>
+&lt;!DOCTYPE html&gt;<br>
+&lt;html lang="fr"&gt;<br>
+&lt;head&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;meta charset="UTF-8"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;Ma première page&lt;/title&gt;<br>
+&lt;/head&gt;<br>
+&lt;body&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;h1&gt;Bonjour le monde !&lt;/h1&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;Ceci est ma première page HTML.&lt;/p&gt;<br>
+&lt;/body&gt;<br>
+&lt;/html&gt;
+                            </code>
+                        </div>
+                    {% endif %}
+                </div>
+            {% elif lesson.course.name == "CSS3" %}
+                <div class="code-examples">
+                    <h3><i class="fas fa-paint-brush"></i> Exemples CSS</h3>
+                    {% if lesson.order == 1 %}
+                        <div class="code-block">
+                            <code>
+/* Sélecteur d'élément */<br>
+h1 {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;color: #00ff88;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;font-size: 2rem;<br>
+}<br><br>
+/* Sélecteur de classe */<br>
+.highlight {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;background-color: #fbbf24;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;padding: 10px;<br>
+}<br><br>
+/* Sélecteur d'ID */<br>
+#header {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;background: linear-gradient(45deg, #00ff88, #00d4ff);<br>
+}
+                            </code>
+                        </div>
+                    {% endif %}
+                </div>
+            {% elif lesson.course.name == "Langage C" %}
+                <div class="code-examples">
+                    <h3><i class="fas fa-code"></i> Exemples C</h3>
+                    {% if lesson.order == 1 %}
+                        <div class="code-block">
+                            <code>
+#include &lt;stdio.h&gt;<br><br>
+int main() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;printf("Hello, World!\n");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+}
+                            </code>
+                        </div>
+                    {% endif %}
+                </div>
+            {% elif lesson.course.name == "Python" %}
+                <div class="code-examples">
+                    <h3><i class="fas fa-code"></i> Exemples Python</h3>
+                    {% if lesson.order == 1 %}
+                        <div class="code-block">
+                            <code>
+# Affichage simple<br>
+print("Hello, World!")<br><br>
+# Variables<br>
+nom = "Alice"<br>
+age = 25<br>
+print(f"Je m'appelle {nom} et j'ai {age} ans")<br><br>
+# Liste<br>
+fruits = ["pomme", "banane", "orange"]<br>
+for fruit in fruits:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print(f"J'aime les {fruit}s")
+                            </code>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <div class="tips-section">
+                <h3><i class="fas fa-lightbulb"></i> Conseils pratiques</h3>
+                <div class="tips-list">
+                    <div class="tip">
+                        <i class="fas fa-check"></i>
+                        <span>Prenez le temps de bien comprendre chaque concept avant de passer au suivant.</span>
+                    </div>
+                    <div class="tip">
+                        <i class="fas fa-check"></i>
+                        <span>Pratiquez régulièrement pour renforcer vos acquis.</span>
+                    </div>
+                    <div class="tip">
+                        <i class="fas fa-check"></i>
+                        <span>N'hésitez pas à expérimenter avec les exemples de code.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lesson-sidebar">
+            <div class="progress-widget">
+                <h3><i class="fas fa-chart-pie"></i> Votre progression</h3>
+                <div class="user-stats">
+                    <div class="stat">
+                        <i class="fas fa-star"></i>
+                        <span>{{ current_user.total_points }} points</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-level-up-alt"></i>
+                        <span>Niveau {{ current_user.level }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lesson-actions">
+                {% if not completed %}
+                    <button id="complete-lesson" class="btn btn-primary btn-full" onclick="completeLesson({{ lesson.id }})">
+                        <i class="fas fa-check"></i>
+                        Marquer comme terminée
+                    </button>
+                {% else %}
+                    <div class="completed-message">
+                        <i class="fas fa-trophy"></i>
+                        <span>Leçon terminée !</span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="navigation-widget">
+                <h3><i class="fas fa-map"></i> Navigation</h3>
+                <!-- TODO: Ajouter navigation vers leçon précédente/suivante -->
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                        Précédente
+                    </button>
+                    <button class="btn btn-secondary" disabled>
+                        Suivante
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour les trophées -->
+<div id="trophy-modal" class="modal">
+    <div class="modal-content">
+        <div class="trophy-celebration">
+            <h2><i class="fas fa-trophy"></i> Nouveau trophée débloqué !</h2>
+            <div id="trophy-details"></div>
+            <button onclick="closeTrophyModal()" class="btn btn-primary">
+                <i class="fas fa-times"></i>
+                Fermer
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function completeLesson(lessonId) {
+    fetch(`/complete_lesson/${lessonId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Mettre à jour l'interface
+            const button = document.getElementById('complete-lesson');
+            button.outerHTML = `
+                <div class="completed-message">
+                    <i class="fas fa-trophy"></i>
+                    <span>Leçon terminée !</span>
+                </div>
+            `;
+            
+            // Afficher les points gagnés
+            showPointsEarned(data.points_earned, data.total_points);
+            
+            // Afficher les nouveaux trophées si il y en a
+            if (data.new_trophies && data.new_trophies.length > 0) {
+                showNewTrophies(data.new_trophies);
+            }
+        } else {
+            alert('Erreur: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Erreur:', error);
+        alert('Une erreur est survenue');
+    });
+}
+
+function showPointsEarned(points, total) {
+    // Animation des points
+    const notification = document.createElement('div');
+    notification.className = 'points-notification';
+    notification.innerHTML = `
+        <i class="fas fa-star"></i>
+        +${points} points !
+        <br>
+        <small>Total: ${total} points</small>
+    `;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+function showNewTrophies(trophies) {
+    const modal = document.getElementById('trophy-modal');
+    const details = document.getElementById('trophy-details');
+    
+    details.innerHTML = trophies.map(trophy => `
+        <div class="trophy-item">
+            <span class="trophy-icon">${trophy.icon}</span>
+            <span class="trophy-name">${trophy.name}</span>
+        </div>
+    `).join('');
+    
+    modal.style.display = 'flex';
+}
+
+function closeTrophyModal() {
+    document.getElementById('trophy-modal').style.display = 'none';
+}
+</script>
+{% endblock %}

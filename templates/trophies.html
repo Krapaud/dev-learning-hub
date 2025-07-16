@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+{% block title %}Trophées - Dev Learning Hub{% endblock %}
+
+{% block content %}
+<div class="trophies-container">
+    <div class="trophies-header">
+        <h1>
+            <i class="fas fa-trophy"></i>
+            Collection de Trophées
+        </h1>
+        <p>Débloquez des trophées en progressant dans vos apprentissages</p>
+        
+        <div class="trophies-stats">
+            <div class="trophy-stat">
+                <span class="stat-number">{{ earned_trophies }}</span>
+                <span class="stat-label">Trophées obtenus</span>
+            </div>
+            <div class="trophy-stat">
+                <span class="stat-number">{{ total_trophies }}</span>
+                <span class="stat-label">Trophées totaux</span>
+            </div>
+            <div class="trophy-stat">
+                <span class="stat-number">{{ "%.1f"|format((earned_trophies / total_trophies * 100) if total_trophies > 0 else 0) }}%</span>
+                <span class="stat-label">Complété</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="rarity-sections">
+        <!-- Trophées Platine -->
+        <div class="rarity-section platinum">
+            <h2>
+                <i class="fas fa-gem"></i>
+                Trophées Platine
+                <span class="rarity-count">{{ trophies_by_rarity.platinum | selectattr('earned') | list | length }}/{{ trophies_by_rarity.platinum | length }}</span>
+            </h2>
+            <div class="trophies-grid">
+                {% for trophy_data in trophies_by_rarity.platinum %}
+                <div class="trophy-card platinum {% if trophy_data.earned %}earned{% else %}locked{% endif %}">
+                    <div class="trophy-icon">{{ trophy_data.trophy.icon }}</div>
+                    <div class="trophy-info">
+                        <h3>{{ trophy_data.trophy.name }}</h3>
+                        <p>{{ trophy_data.trophy.description }}</p>
+                        {% if trophy_data.earned %}
+                            <div class="earned-date">
+                                <i class="fas fa-calendar"></i>
+                                Obtenu le {{ trophy_data.earned_at.strftime('%d/%m/%Y') }}
+                            </div>
+                        {% else %}
+                            <div class="requirement">
+                                <i class="fas fa-lock"></i>
+                                {% if trophy_data.trophy.requirement_type == 'points' %}
+                                    Gagnez {{ trophy_data.trophy.requirement_value }} points
+                                {% elif trophy_data.trophy.requirement_type == 'courses_completed' %}
+                                    Complétez {{ trophy_data.trophy.requirement_value }} cours
+                                {% elif trophy_data.trophy.requirement_type == 'lessons_completed' %}
+                                    Complétez {{ trophy_data.trophy.requirement_value }} leçons
+                                {% else %}
+                                    Condition spéciale à remplir
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% if trophy_data.earned %}
+                        <div class="earned-badge">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Trophées Or -->
+        <div class="rarity-section gold">
+            <h2>
+                <i class="fas fa-medal"></i>
+                Trophées Or
+                <span class="rarity-count">{{ trophies_by_rarity.gold | selectattr('earned') | list | length }}/{{ trophies_by_rarity.gold | length }}</span>
+            </h2>
+            <div class="trophies-grid">
+                {% for trophy_data in trophies_by_rarity.gold %}
+                <div class="trophy-card gold {% if trophy_data.earned %}earned{% else %}locked{% endif %}">
+                    <div class="trophy-icon">{{ trophy_data.trophy.icon }}</div>
+                    <div class="trophy-info">
+                        <h3>{{ trophy_data.trophy.name }}</h3>
+                        <p>{{ trophy_data.trophy.description }}</p>
+                        {% if trophy_data.earned %}
+                            <div class="earned-date">
+                                <i class="fas fa-calendar"></i>
+                                Obtenu le {{ trophy_data.earned_at.strftime('%d/%m/%Y') }}
+                            </div>
+                        {% else %}
+                            <div class="requirement">
+                                <i class="fas fa-lock"></i>
+                                {% if trophy_data.trophy.requirement_type == 'points' %}
+                                    Gagnez {{ trophy_data.trophy.requirement_value }} points
+                                {% elif trophy_data.trophy.requirement_type == 'courses_completed' %}
+                                    Complétez {{ trophy_data.trophy.requirement_value }} cours
+                                {% elif trophy_data.trophy.requirement_type == 'lessons_completed' %}
+                                    Complétez {{ trophy_data.trophy.requirement_value }} leçons
+                                {% else %}
+                                    Condition spéciale à remplir
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% if trophy_data.earned %}
+                        <div class="earned-badge">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Trophées Argent -->
+        <div class="rarity-section silver">
+            <h2>
+                <i class="fas fa-award"></i>
+                Trophées Argent
+                <span class="rarity-count">{{ trophies_by_rarity.silver | selectattr('earned') | list | length }}/{{ trophies_by_rarity.silver | length }}</span>
+            </h2>
+            <div class="trophies-grid">
+                {% for trophy_data in trophies_by_rarity.silver %}
+                <div class="trophy-card silver {% if trophy_data.earned %}earned{% else %}locked{% endif %}">
+                    <div class="trophy-icon">{{ trophy_data.trophy.icon }}</div>
+                    <div class="trophy-info">
+                        <h3>{{ trophy_data.trophy.name }}</h3>
+                        <p>{{ trophy_data.trophy.description }}</p>
+                        {% if trophy_data.earned %}
+                            <div class="earned-date">
+                                <i class="fas fa-calendar"></i>
+                                Obtenu le {{ trophy_data.earned_at.strftime('%d/%m/%Y') }}
+                            </div>
+                        {% else %}
+                            <div class="requirement">
+                                <i class="fas fa-lock"></i>
+                                {% if trophy_data.trophy.requirement_type == 'points' %}
+                                    Gagnez {{ trophy_data.trophy.requirement_value }} points
+                                {% elif trophy_data.trophy.requirement_type == 'courses_completed' %}
+                                    Complétez {{ trophy_data.trophy.requirement_value }} cours
+                                {% elif trophy_data.trophy.requirement_type == 'lessons_completed' %}
+                                    Complétez {{ trophy_data.trophy.requirement_value }} leçons
+                                {% else %}
+                                    Condition spéciale à remplir
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% if trophy_data.earned %}
+                        <div class="earned-badge">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Trophées Bronze -->
+        <div class="rarity-section bronze">
+            <h2>
+                <i class="fas fa-certificate"></i>
+                Trophées Bronze
+                <span class="rarity-count">{{ trophies_by_rarity.bronze | selectattr('earned') | list | length }}/{{ trophies_by_rarity.bronze | length }}</span>
+            </h2>
+            <div class="trophies-grid">
+                {% for trophy_data in trophies_by_rarity.bronze %}
+                <div class="trophy-card bronze {% if trophy_data.earned %}earned{% else %}locked{% endif %}">
+                    <div class="trophy-icon">{{ trophy_data.trophy.icon }}</div>
+                    <div class="trophy-info">
+                        <h3>{{ trophy_data.trophy.name }}</h3>
+                        <p>{{ trophy_data.trophy.description }}</p>
+                        {% if trophy_data.earned %}
+                            <div class="earned-date">
+                                <i class="fas fa-calendar"></i>
+                                Obtenu le {{ trophy_data.earned_at.strftime('%d/%m/%Y') }}
+                            </div>
+                        {% else %}
+                            <div class="requirement">
+                                <i class="fas fa-lock"></i>
+                                {% if trophy_data.trophy.requirement_type == 'points' %}
+                                    Gagnez {{ trophy_data.trophy.requirement_value }} points
+                                {% elif trophy_data.trophy.requirement_type == 'courses_completed' %}
+                                    Complétez {{ trophy_data.trophy.requirement_value }} cours
+                                {% elif trophy_data.trophy.requirement_type == 'lessons_completed' %}
+                                    Complétez {{ trophy_data.trophy.requirement_value }} leçons
+                                {% else %}
+                                    Condition spéciale à remplir
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% if trophy_data.earned %}
+                        <div class="earned-badge">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="trophies-actions">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i>
+            Retour au dashboard
+        </a>
+        
+        <div class="achievement-tips">
+            <h3><i class="fas fa-lightbulb"></i> Conseils pour débloquer des trophées</h3>
+            <ul>
+                <li>Complétez des leçons régulièrement pour gagner des points</li>
+                <li>Terminez des cours entiers pour les trophées de maîtrise</li>
+                <li>Explorez différents langages pour devenir polyglotte</li>
+                <li>La persévérance est la clé pour les trophées rares</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
