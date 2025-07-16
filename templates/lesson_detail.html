@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block title %}{{ lesson.title }} - Dev Learning Hub{% endblock %}
+
+{% block content %}
+<div class="lesson-container">
+    <div class="lesson-header">
+        <div class="lesson-nav">
+            <a href="{{ url_for('course_detail', course_id=lesson.course_id) }}" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Retour au cours
+            </a>
+            <div class="course-info">
+                <span class="course-name">{{ lesson.course.name }}</span>
+                <span class="lesson-order">Leçon {{ lesson.order }}</span>
+            </div>
+        </div>
+        
+        <div class="lesson-title-section">
+            <h1 class="lesson-title">{{ lesson.title }}</h1>
+            {% if is_completed %}
+            <div class="completion-badge">
+                <i class="fas fa-check-circle"></i>
+                <span>Terminé</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="lesson-content">
+        <div class="content-card">
+            <div class="content-body">
+                {{ lesson.content|nl2br|safe }}
+            </div>
+            
+            <div class="content-footer">
+                <div class="lesson-points">
+                    <i class="fas fa-coins"></i>
+                    <span>Cette leçon rapporte 10 points</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="lesson-actions">
+        {% if not is_completed %}
+        <button id="complete-lesson-btn" class="btn btn-primary btn-lg" data-lesson-id="{{ lesson.id }}">
+            <i class="fas fa-check"></i>
+            Marquer comme terminé
+        </button>
+        {% else %}
+        <div class="already-completed">
+            <i class="fas fa-check-circle"></i>
+            <span>Vous avez déjà terminé cette leçon</span>
+        </div>
+        {% endif %}
+        
+        <div class="navigation-buttons">
+            {% if lesson.order > 1 %}
+            {% set prev_lesson = lesson.course.lessons|selectattr('order', 'equalto', lesson.order - 1)|first %}
+            <a href="{{ url_for('lesson_detail', lesson_id=prev_lesson.id) }}" class="btn btn-secondary">
+                <i class="fas fa-chevron-left"></i>
+                Leçon précédente
+            </a>
+            {% endif %}
+            
+            {% if lesson.order < lesson.course.lessons|length %}
+            {% set next_lesson = lesson.course.lessons|selectattr('order', 'equalto', lesson.order + 1)|first %}
+            <a href="{{ url_for('lesson_detail', lesson_id=next_lesson.id) }}" class="btn btn-secondary">
+                Leçon suivante
+                <i class="fas fa-chevron-right"></i>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal de félicitations -->
+<div id="completion-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Félicitations ! 🎉</h3>
+        </div>
+        <div class="modal-body">
+            <div class="celebration-icon">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <p>Vous avez terminé la leçon avec succès !</p>
+            <div class="reward-info">
+                <div class="reward-item">
+                    <i class="fas fa-coins"></i>
+                    <span>+10 points</span>
+                </div>
+                <div class="reward-item" id="level-up" style="display: none;">
+                    <i class="fas fa-level-up-alt"></i>
+                    <span>Niveau supérieur !</span>
+                </div>
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-primary" onclick="closeModal()">
+                Continuer
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const completeBtn = document.getElementById('complete-lesson-btn');
+    
+    if (completeBtn) {
+        completeBtn.addEventListener('click', function() {
+            const lessonId = this.dataset.lessonId;
+            
+            // Animation du bouton
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Traitement...';
+            
+            fetch(`/complete_lesson/${lessonId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Afficher le modal de félicitations
+                    showCompletionModal(data);
+                    
+                    // Mettre à jour l'interface
+                    this.style.display = 'none';
+                    
+                    // Ajouter le badge de completion
+                    const titleSection = document.querySelector('.lesson-title-section');
+                    const badge = document.createElement('div');
+                    badge.className = 'completion-badge';
+                    badge.innerHTML = '<i class="fas fa-check-circle"></i><span>Terminé</span>';
+                    titleSection.appendChild(badge);
+                    
+                    // Mettre à jour les points dans la navbar
+                    const pointsSpan = document.querySelector('.points');
+                    if (pointsSpan) {
+                        pointsSpan.textContent = data.points + ' pts';
+                    }
+                    
+                    const levelSpan = document.querySelector('.level');
+                    if (levelSpan) {
+                        const oldLevel = parseInt(levelSpan.textContent.match(/\d+/)[0]);
+                        if (data.level > oldLevel) {
+                            levelSpan.textContent = `Niveau ${data.level}`;
+                            document.getElementById('level-up').style.display = 'block';
+                        }
+                    }
+                    
+                } else {
+                    alert('Erreur: ' + data.message);
+                    this.disabled = false;
+                    this.innerHTML = '<i class="fas fa-check"></i> Marquer comme terminé';
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-check"></i> Marquer comme terminé';
+            });
+        });
+    }
+});
+
+function showCompletionModal(data) {
+    const modal = document.getElementById('completion-modal');
+    modal.style.display = 'flex';
+    modal.classList.add('show');
+}
+
+function closeModal() {
+    const modal = document.getElementById('completion-modal');
+    modal.style.display = 'none';
+    modal.classList.remove('show');
+}
+
+// Fermer le modal en cliquant à l'extérieur
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('completion-modal');
+    if (event.target === modal) {
+        closeModal();
+    }
+});
+</script>
+{% endblock %}

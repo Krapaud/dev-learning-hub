@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}{{ course.name }} - Dev Learning Hub{% endblock %}
+
+{% block content %}
+<div class="course-detail-container">
+    <div class="course-header">
+        <div class="course-icon-large" style="color: {{ course.color }};">
+            <i class="{{ course.icon }}"></i>
+        </div>
+        <div class="course-info">
+            <h1 class="course-title">{{ course.name }}</h1>
+            <p class="course-description">{{ course.description }}</p>
+            
+            <div class="course-stats">
+                <div class="stat-item">
+                    <i class="fas fa-book"></i>
+                    <span>{{ course.lessons|length }} leçons</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-check-circle"></i>
+                    {% set completed_count = completed_lesson_ids|select('in', course.lessons|map(attribute='id')|list)|list|length %}
+                    <span>{{ completed_count }} complétées</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-coins"></i>
+                    <span>{{ course.lessons|length * 10 }} points max</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="course-progress-section">
+        {% set progress = (completed_count / course.lessons|length * 100) if course.lessons else 0 %}
+        <div class="progress-card">
+            <div class="progress-info">
+                <span class="progress-label">Progression du cours</span>
+                <span class="progress-percentage">{{ "%.0f"|format(progress) }}%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ progress }}%; background-color: {{ course.color }};"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="lessons-section">
+        <h2 class="section-title">
+            <i class="fas fa-list"></i>
+            Leçons du cours
+        </h2>
+        
+        <div class="lessons-list">
+            {% for lesson in course.lessons %}
+            {% set is_completed = lesson.id in completed_lesson_ids %}
+            {% set is_locked = loop.index0 > 0 and course.lessons[loop.index0-1].id not in completed_lesson_ids %}
+            
+            <div class="lesson-item {% if is_completed %}completed{% endif %} {% if is_locked %}locked{% endif %}">
+                <div class="lesson-number">
+                    {% if is_completed %}
+                        <i class="fas fa-check"></i>
+                    {% elif is_locked %}
+                        <i class="fas fa-lock"></i>
+                    {% else %}
+                        {{ loop.index }}
+                    {% endif %}
+                </div>
+                
+                <div class="lesson-content">
+                    <h3 class="lesson-title">{{ lesson.title }}</h3>
+                    <p class="lesson-description">
+                        {% if is_locked %}
+                            Complétez la leçon précédente pour déverrouiller
+                        {% else %}
+                            Découvrez {{ lesson.title|lower }} et progressez dans votre apprentissage
+                        {% endif %}
+                    </p>
+                </div>
+                
+                <div class="lesson-actions">
+                    {% if is_completed %}
+                        <span class="lesson-status completed">
+                            <i class="fas fa-check-circle"></i>
+                            Terminé
+                        </span>
+                        <a href="{{ url_for('lesson_detail', lesson_id=lesson.id) }}" class="btn btn-secondary">
+                            <i class="fas fa-eye"></i>
+                            Revoir
+                        </a>
+                    {% elif is_locked %}
+                        <span class="lesson-status locked">
+                            <i class="fas fa-lock"></i>
+                            Verrouillé
+                        </span>
+                    {% else %}
+                        <a href="{{ url_for('lesson_detail', lesson_id=lesson.id) }}" class="btn btn-primary">
+                            <i class="fas fa-play"></i>
+                            Commencer
+                        </a>
+                    {% endif %}
+                </div>
+                
+                {% if is_completed %}
+                <div class="lesson-reward">
+                    <i class="fas fa-coins"></i>
+                    +10 points
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="course-actions">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i>
+            Retour au dashboard
+        </a>
+        
+        {% if progress == 100 %}
+        <div class="course-completion">
+            <div class="completion-badge">
+                <i class="fas fa-trophy"></i>
+                <span>Cours terminé !</span>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animation de la barre de progression
+    const progressFill = document.querySelector('.progress-fill');
+    if (progressFill) {
+        setTimeout(() => {
+            progressFill.style.transition = 'width 1s ease-in-out';
+        }, 500);
+    }
+    
+    // Animation des leçons
+    const lessonItems = document.querySelectorAll('.lesson-item');
+    lessonItems.forEach((item, index) => {
+        item.style.animationDelay = `${index * 0.1}s`;
+        item.classList.add('fade-in-up');
+    });
+});
+</script>
+{% endblock %}

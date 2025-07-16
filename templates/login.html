@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Connexion - Dev Learning Hub{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="auth-icon">
+                <i class="fas fa-sign-in-alt"></i>
+            </div>
+            <h2 class="auth-title">Connexion</h2>
+            <p class="auth-subtitle">Accédez à votre tableau de bord</p>
+        </div>
+        
+        <form method="POST" class="auth-form">
+            <div class="form-group">
+                <label for="username">
+                    <i class="fas fa-user"></i>
+                    Nom d'utilisateur
+                </label>
+                <input type="text" id="username" name="username" required 
+                       placeholder="Votre nom d'utilisateur">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">
+                    <i class="fas fa-lock"></i>
+                    Mot de passe
+                </label>
+                <input type="password" id="password" name="password" required 
+                       placeholder="Votre mot de passe">
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-block">
+                <i class="fas fa-sign-in-alt"></i>
+                Se connecter
+            </button>
+        </form>
+        
+        <div class="auth-footer">
+            <p>Pas encore de compte ?</p>
+            <a href="{{ url_for('register') }}" class="auth-link">
+                Créer un compte
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const authCard = document.querySelector('.auth-card');
+    authCard.classList.add('fade-in-up');
+    
+    // Animation sur focus des inputs
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+        
+        input.addEventListener('blur', function() {
+            if (!this.value) {
+                this.parentElement.classList.remove('focused');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
