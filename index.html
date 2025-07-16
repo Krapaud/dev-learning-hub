@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Learning Hub - Plateforme d'apprentissage pour développeurs</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <i class="fas fa-code"></i>
+                    <span>Dev Learning Hub</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#home">Accueil</a></li>
+                    <li><a href="#courses">Cours</a></li>
+                    <li><a href="#progress">Progression</a></li>
+                    <li><a href="#achievements">Succès</a></li>
+                    <li class="auth-buttons">
+                        <button id="loginBtn" class="btn-secondary">Connexion</button>
+                        <button id="registerBtn" class="btn-primary">Inscription</button>
+                        <div id="userMenu" class="user-menu" style="display: none;">
+                            <span id="username"></span>
+                            <button id="logoutBtn" class="btn-secondary">Déconnexion</button>
+                        </div>
+                    </li>
+                </ul>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Section Accueil -->
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>Bienvenue sur Dev Learning Hub</h1>
+                <p>Votre plateforme d'apprentissage pour maîtriser la programmation</p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <i class="fas fa-book"></i>
+                        <span>4 Langages</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-users"></i>
+                        <span>Communauté Active</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-trophy"></i>
+                        <span>Système de Succès</span>
+                    </div>
+                </div>
+                <button class="cta-button" onclick="scrollToSection('courses')">
+                    Commencer à Apprendre
+                </button>
+            </div>
+        </section>
+
+        <!-- Section Cours -->
+        <section id="courses" class="courses-section">
+            <div class="container">
+                <h2>Nos Cours</h2>
+                <div class="difficulty-filter">
+                    <button class="filter-btn active" data-difficulty="all">Tous</button>
+                    <button class="filter-btn" data-difficulty="debutant">Débutant</button>
+                    <button class="filter-btn" data-difficulty="intermediaire">Intermédiaire</button>
+                    <button class="filter-btn" data-difficulty="avance">Avancé</button>
+                </div>
+                <div class="courses-grid" id="coursesGrid">
+                    <!-- Les cours seront chargés dynamiquement -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Progression -->
+        <section id="progress" class="progress-section">
+            <div class="container">
+                <h2>Votre Progression</h2>
+                <div id="progressContent">
+                    <div class="login-required">
+                        <i class="fas fa-lock"></i>
+                        <p>Connectez-vous pour voir votre progression</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Succès -->
+        <section id="achievements" class="achievements-section">
+            <div class="container">
+                <h2>Succès</h2>
+                <div id="achievementsContent">
+                    <div class="login-required">
+                        <i class="fas fa-lock"></i>
+                        <p>Connectez-vous pour voir vos succès</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal de Connexion -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Connexion</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email:</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Mot de passe:</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn-primary">Se connecter</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal d'Inscription -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Inscription</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerUsername">Nom d'utilisateur:</label>
+                    <input type="text" id="registerUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email:</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Mot de passe:</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirmer le mot de passe:</label>
+                    <input type="password" id="confirmPassword" required>
+                </div>
+                <button type="submit" class="btn-primary">S'inscrire</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Cours -->
+    <div id="courseModal" class="modal course-modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="courseContent">
+                <!-- Le contenu du cours sera chargé ici -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Dev Learning Hub. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/courses.js"></script>
+    <script src="js/progress.js"></script>
+</body>
+</html>
