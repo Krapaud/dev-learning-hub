@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Accueil - GeekSite{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1><i class="fas fa-code"></i> GeekSite</h1>
+    <p>Bienvenue dans l'univers ultime des geeks ! Un espace sombre et mystérieux où la technologie rencontre la passion.</p>
+    
+    {% if not session.user_id %}
+        <div class="hero-actions">
+            <a href="{{ url_for('register') }}" class="btn btn-primary">
+                <i class="fas fa-rocket"></i> Rejoindre la communauté
+            </a>
+            <a href="{{ url_for('login') }}" class="btn btn-secondary">
+                <i class="fas fa-sign-in-alt"></i> Se connecter
+            </a>
+        </div>
+    {% else %}
+        <div class="hero-actions">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+                <i class="fas fa-dashboard"></i> Accéder au Dashboard
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+<div class="dashboard-grid">
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-terminal"></i> Terminal d'accès
+        </div>
+        <p>Connectez-vous à votre espace personnel sécurisé avec authentification avancée.</p>
+        <div class="code-block">
+            $ ssh user@geeksite.local<br>
+            > Authentification requise...<br>
+            > Accès accordé ✓
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-shield-alt"></i> Sécurité renforcée
+        </div>
+        <p>Système d'authentification avec gestion des rôles utilisateur et administrateur.</p>
+        <ul style="color: var(--text-gray); margin-top: 1rem;">
+            <li><i class="fas fa-check" style="color: var(--text-primary);"></i> Mots de passe hashés</li>
+            <li><i class="fas fa-check" style="color: var(--text-primary);"></i> Sessions sécurisées</li>
+            <li><i class="fas fa-check" style="color: var(--text-primary);"></i> Contrôle d'accès</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-cogs"></i> Technologies
+        </div>
+        <p>Stack technique moderne et performante :</p>
+        <div style="margin-top: 1rem;">
+            <span class="badge badge-user"><i class="fab fa-python"></i> Python/Flask</span>
+            <span class="badge badge-admin"><i class="fab fa-html5"></i> HTML5</span>
+            <span class="badge badge-user"><i class="fab fa-css3-alt"></i> CSS3</span>
+            <span class="badge badge-admin"><i class="fab fa-js-square"></i> JavaScript</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-users"></i> Communauté
+        </div>
+        <p>Rejoignez une communauté passionnée de développeurs et de geeks.</p>
+        {% if session.user_id %}
+            <p style="color: var(--text-primary); margin-top: 1rem;">
+                <i class="fas fa-user-check"></i> Vous êtes connecté en tant que <strong>{{ session.username }}</strong>
+            </p>
+        {% else %}
+            <a href="{{ url_for('register') }}" class="btn" style="margin-top: 1rem;">
+                <i class="fas fa-user-plus"></i> S'inscrire maintenant
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card" style="text-align: center; margin: 3rem auto; max-width: 800px;">
+    <div class="card-title">
+        <i class="fas fa-matrix"></i> Matrix Code Rain
+    </div>
+    <p>L'arrière-plan animé en Matrix rain ajoute une ambiance cyberpunk authentique à votre expérience de navigation.</p>
+    <div class="code-block" style="text-align: left; margin-top: 2rem;">
+        // Animation Matrix en temps réel<br>
+        const matrix = new MatrixRain();<br>
+        matrix.start();<br>
+        <span style="color: var(--text-accent);">// Immersion totale garantie</span>
+    </div>
+</div>
+{% endblock %}

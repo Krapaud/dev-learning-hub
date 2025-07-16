@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - GeekSite{% endblock %}
+
+{% block content %}
+<div class="hero" style="margin-bottom: 3rem;">
+    <h1><i class="fas fa-dashboard"></i> Terminal Dashboard</h1>
+    <p>Bienvenue dans votre espace personnel, {{ user.username }}</p>
+    <div class="code-block" style="max-width: 600px; margin: 2rem auto;">
+        $ whoami<br>
+        > {{ user.username }}<br>
+        $ id<br>
+        > uid={{ user.id }} groups={{ 'admin' if user.is_admin else 'user' }}<br>
+        $ uptime<br>
+        > Connecté depuis {{ user.last_login.strftime('%d/%m/%Y %H:%M') if user.last_login else 'Première connexion' }}
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="stats-card">
+        <i class="fas fa-user-circle" style="font-size: 3rem; color: var(--text-primary); margin-bottom: 1rem;"></i>
+        <span class="stats-number">{{ user.id }}</span>
+        <span class="stats-label">ID Utilisateur</span>
+    </div>
+    
+    <div class="stats-card">
+        <i class="fas fa-calendar-alt" style="font-size: 3rem; color: var(--text-secondary); margin-bottom: 1rem;"></i>
+        <span class="stats-number">{{ user.created_at.strftime('%d/%m') }}</span>
+        <span class="stats-label">Membre depuis</span>
+    </div>
+    
+    <div class="stats-card">
+        <i class="fas fa-shield-alt" style="font-size: 3rem; color: {{ 'var(--text-accent)' if user.is_admin else 'var(--text-gray)' }}; margin-bottom: 1rem;"></i>
+        <span class="stats-number">{{ 'ADMIN' if user.is_admin else 'USER' }}</span>
+        <span class="stats-label">Niveau d'accès</span>
+    </div>
+    
+    <div class="stats-card">
+        <i class="fas fa-plug" style="font-size: 3rem; color: #2ed573; margin-bottom: 1rem;"></i>
+        <span class="stats-number">ONLINE</span>
+        <span class="stats-label">Statut</span>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-user-cog"></i> Profil utilisateur
+        </div>
+        <p><strong>Nom d'utilisateur :</strong> {{ user.username }}</p>
+        <p><strong>Email :</strong> {{ user.email }}</p>
+        <p><strong>Type de compte :</strong> 
+            <span class="badge {{ 'badge-admin' if user.is_admin else 'badge-user' }}">
+                {{ 'Administrateur' if user.is_admin else 'Utilisateur' }}
+            </span>
+        </p>
+        <p><strong>Créé le :</strong> {{ user.created_at.strftime('%d/%m/%Y à %H:%M') }}</p>
+        <p><strong>Dernière connexion :</strong> {{ user.last_login.strftime('%d/%m/%Y à %H:%M') if user.last_login else 'Première connexion' }}</p>
+        
+        <a href="{{ url_for('profile') }}" class="btn btn-primary" style="margin-top: 1rem;">
+            <i class="fas fa-edit"></i> Modifier le profil
+        </a>
+    </div>
+    
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-terminal"></i> Actions rapides
+        </div>
+        <div class="code-block">
+            > Commandes disponibles :<br><br>
+            <a href="{{ url_for('profile') }}" style="color: var(--text-primary); text-decoration: none;">$ ./profile --edit</a><br>
+            {% if user.is_admin %}
+            <a href="{{ url_for('admin_panel') }}" style="color: var(--text-accent); text-decoration: none;">$ sudo ./admin-panel</a><br>
+            {% endif %}
+            <a href="{{ url_for('logout') }}" style="color: #ff4757; text-decoration: none;">$ logout</a><br>
+        </div>
+        
+        <div style="margin-top: 1rem;">
+            <a href="{{ url_for('profile') }}" class="btn btn-secondary">
+                <i class="fas fa-user"></i> Profil
+            </a>
+            {% if user.is_admin %}
+                <a href="{{ url_for('admin_panel') }}" class="btn" style="border-color: var(--text-accent); color: var(--text-accent);">
+                    <i class="fas fa-cogs"></i> Admin
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% if user.is_admin %}
+<div class="card" style="border-color: var(--text-accent); margin-top: 2rem;">
+    <div class="card-title" style="color: var(--text-accent);">
+        <i class="fas fa-crown"></i> Panneau Administrateur
+    </div>
+    <p>Vous avez des privilèges administrateur. Vous pouvez gérer les utilisateurs et les paramètres du système.</p>
+    
+    <div class="code-block" style="margin: 1rem 0;">
+        <span style="color: var(--text-accent);">// Privilèges administrateur détectés</span><br>
+        permissions = ['user_management', 'system_config', 'security_settings']<br>
+        status = 'ADMIN_ACCESS_GRANTED'
+    </div>
+    
+    <a href="{{ url_for('admin_panel') }}" class="btn" style="background: var(--text-accent); border-color: var(--text-accent); color: white;">
+        <i class="fas fa-tools"></i> Accéder au panneau d'administration
+    </a>
+</div>
+{% endif %}
+
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-info-circle"></i> Informations système
+    </div>
+    <div class="code-block">
+        System: GeekSite v1.0<br>
+        Framework: Flask {{ '2.3.0' }}<br>
+        Database: SQLite<br>
+        Security: SHA-256 + Salt<br>
+        Session: {{ session.get('_permanent', False) and 'Permanent' or 'Temporary' }}<br>
+        User-Agent: <span style="color: var(--text-gray);">{{ request.headers.get('User-Agent', 'Unknown')[:50] }}...</span>
+    </div>
+</div>
+
+<style>
+.dashboard-grid .stats-card:hover {
+    transform: translateY(-5px) scale(1.02);
+}
+
+.dashboard-grid .card:hover {
+    border-color: var(--text-primary);
+    box-shadow: var(--shadow-glow);
+}
+
+.code-block a:hover {
+    text-shadow: 0 0 10px currentColor;
+}
+</style>
+{% endblock %}
