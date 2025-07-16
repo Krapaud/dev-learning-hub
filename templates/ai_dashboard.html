@@ -5,7 +5,9 @@
 {% block content %}
 <div class="ai-dashboard">
     <div class="dashboard-header">
-        <h1 class="cyber-title"><span class="glitch" data-text="Dashboard IA">Dashboard IA</span></h1>
+        <h1 class="cyber-title">
+            <span class="ai-glitch-title" data-text="Dashboard IA">Dashboard IA</span>
+        </h1>
         <p class="subtitle">Votre apprentissage personnalisé alimenté par l'Intelligence Artificielle</p>
     </div>
 
@@ -195,6 +197,231 @@
 .cyber-title {
     font-size: 3rem;
     margin-bottom: 1rem;
+    position: relative;
+}
+
+/* Effet glitch avancé pour le titre IA */
+.ai-glitch-title {
+    position: relative;
+    display: inline-block;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-primary);
+    text-shadow: 
+        0 0 10px var(--accent-primary),
+        0 0 20px var(--accent-primary),
+        0 0 30px var(--accent-primary);
+    animation: ai-pulse 3s ease-in-out infinite;
+    z-index: 10;
+}
+
+.glitch-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    mix-blend-mode: screen;
+}
+
+.glitch-layer:nth-child(1) {
+    color: #ff0040;
+    animation: glitch-red 2s infinite linear;
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+}
+
+.glitch-layer:nth-child(2) {
+    color: #00ff41;
+    animation: glitch-green 2.5s infinite linear;
+    clip-path: polygon(0 45%, 100% 45%, 100% 85%, 0 85%);
+}
+
+.glitch-layer:nth-child(3) {
+    color: #0080ff;
+    animation: glitch-blue 1.8s infinite linear;
+    clip-path: polygon(0 85%, 100% 85%, 100% 100%, 0 100%);
+}
+
+@keyframes ai-pulse {
+    0%, 100% {
+        text-shadow: 
+            0 0 10px var(--accent-primary),
+            0 0 20px var(--accent-primary),
+            0 0 30px var(--accent-primary);
+        filter: brightness(1);
+    }
+    50% {
+        text-shadow: 
+            0 0 20px var(--accent-primary),
+            0 0 40px var(--accent-primary),
+            0 0 60px var(--accent-primary),
+            0 0 80px var(--accent-primary);
+        filter: brightness(1.3);
+    }
+}
+
+@keyframes glitch-red {
+    0% {
+        opacity: 0;
+        transform: translateX(0);
+    }
+    2% {
+        opacity: 1;
+        transform: translateX(-2px) skew(-5deg);
+    }
+    4% {
+        opacity: 0;
+        transform: translateX(2px) skew(5deg);
+    }
+    6% {
+        opacity: 1;
+        transform: translateX(-1px) skew(2deg);
+    }
+    8% {
+        opacity: 0;
+        transform: translateX(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(0);
+    }
+}
+
+@keyframes glitch-green {
+    0% {
+        opacity: 0;
+        transform: translateX(0);
+    }
+    3% {
+        opacity: 1;
+        transform: translateX(3px) skew(8deg);
+    }
+    5% {
+        opacity: 0;
+        transform: translateX(-2px) skew(-3deg);
+    }
+    7% {
+        opacity: 1;
+        transform: translateX(1px) skew(-8deg);
+    }
+    9% {
+        opacity: 0;
+        transform: translateX(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(0);
+    }
+}
+
+@keyframes glitch-blue {
+    0% {
+        opacity: 0;
+        transform: translateX(0);
+    }
+    1% {
+        opacity: 1;
+        transform: translateX(-3px) skew(10deg);
+    }
+    3% {
+        opacity: 0;
+        transform: translateX(4px) skew(-5deg);
+    }
+    5% {
+        opacity: 1;
+        transform: translateX(-1px) skew(3deg);
+    }
+    7% {
+        opacity: 0;
+        transform: translateX(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(0);
+    }
+}
+
+/* Effet au survol pour intensifier le glitch */
+.ai-glitch-title:hover {
+    animation: ai-pulse 0.5s ease-in-out infinite;
+}
+
+.ai-glitch-title:hover .glitch-layer:nth-child(1) {
+    animation: glitch-red 0.3s infinite linear;
+}
+
+.ai-glitch-title:hover .glitch-layer:nth-child(2) {
+    animation: glitch-green 0.4s infinite linear;
+}
+
+.ai-glitch-title:hover .glitch-layer:nth-child(3) {
+    animation: glitch-blue 0.2s infinite linear;
+}
+
+/* Effet de scan line qui traverse le titre */
+.ai-glitch-title::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(0, 255, 255, 0.8), 
+        transparent);
+    animation: scan-line 4s infinite linear;
+    z-index: 1;
+}
+
+/* Effet de brillance qui traverse le texte */
+.ai-glitch-title::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -150%;
+    width: 50%;
+    height: calc(100% + 20px);
+    background: linear-gradient(45deg, 
+        transparent 30%, 
+        rgba(255, 255, 255, 0.3) 50%, 
+        transparent 70%);
+    animation: shine-sweep 6s infinite ease-in-out;
+    pointer-events: none;
+    z-index: 2;
+}
+
+@keyframes scan-line {
+    0% {
+        left: -100%;
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        left: 100%;
+        opacity: 0;
+    }
+}
+
+@keyframes shine-sweep {
+    0% {
+        left: -150%;
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        left: 150%;
+        opacity: 0;
+    }
 }
 
 .subtitle {
@@ -234,12 +461,29 @@
     border-radius: 8px;
     padding: 1.5rem;
     transition: all 0.3s ease;
+    animation: slideInUp 0.6s ease-out;
+    animation-fill-mode: backwards;
+}
+
+.recommendation-card:nth-child(1) { animation-delay: 0.1s; }
+.recommendation-card:nth-child(2) { animation-delay: 0.2s; }
+.recommendation-card:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .recommendation-card:hover {
     border-color: var(--accent-color);
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
-    transform: translateY(-5px);
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.4);
+    transform: translateY(-8px) scale(1.02);
 }
 
 .rec-header {
@@ -575,11 +819,155 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Amélioration de l'effet glitch pour le titre IA
+    enhanceGlitchTitle();
+    
+    // Créer l'effet de particules pour le dashboard IA
+    createAIParticles();
+    
     // Chatbot functionality
     const chatInput = document.getElementById('chat-input');
     const sendButton = document.getElementById('send-message');
     const chatMessages = document.getElementById('chat-messages');
     const quickButtons = document.querySelectorAll('.quick-btn');
+
+    function enhanceGlitchTitle() {
+        const glitchTitle = document.querySelector('.ai-glitch-title');
+        if (!glitchTitle) return;
+        
+        // Effet de corruption de texte aléatoire
+        const originalText = 'Dashboard IA';
+        const glitchChars = '!@#$%^&*()_+-=[]{}|;:,.<>?`~';
+        
+        function createRandomGlitch() {
+            if (Math.random() > 0.95) { // 5% de chance de glitch
+                const layers = glitchTitle.querySelectorAll('.glitch-layer');
+                layers.forEach((layer, index) => {
+                    if (Math.random() > 0.7) {
+                        // Corruption temporaire du texte
+                        let corruptedText = originalText.split('').map(char => {
+                            return Math.random() > 0.8 ? 
+                                glitchChars[Math.floor(Math.random() * glitchChars.length)] : 
+                                char;
+                        }).join('');
+                        
+                        layer.textContent = corruptedText;
+                        layer.style.opacity = '1';
+                        
+                        // Restaurer le texte original après un délai court
+                        setTimeout(() => {
+                            layer.textContent = originalText;
+                            layer.style.opacity = '0';
+                        }, 50 + Math.random() * 100);
+                    }
+                });
+            }
+        }
+        
+        // Effet de corruption aléatoire
+        setInterval(createRandomGlitch, 200);
+        
+        // Effet intensifié au clic
+        glitchTitle.addEventListener('click', function() {
+            this.style.animation = 'ai-pulse 0.1s ease-in-out 5';
+            
+            // Reset animation après
+            setTimeout(() => {
+                this.style.animation = 'ai-pulse 3s ease-in-out infinite';
+            }, 500);
+        });
+        
+        // Effet RGB split au survol
+        glitchTitle.addEventListener('mouseenter', function() {
+            this.style.filter = 'blur(1px)';
+            this.style.textShadow = `
+                -2px 0 0 #ff0040,
+                2px 0 0 #00ff41,
+                0 0 10px var(--accent-color),
+                0 0 20px var(--accent-color)
+            `;
+        });
+        
+        glitchTitle.addEventListener('mouseleave', function() {
+            this.style.filter = 'none';
+            this.style.textShadow = `
+                0 0 10px var(--accent-color),
+                0 0 20px var(--accent-color),
+                0 0 30px var(--accent-color)
+            `;
+        });
+    }
+    
+    // Chatbot functionality
+    const chatInput = document.getElementById('chat-input');
+    const sendButton = document.getElementById('send-message');
+    const chatMessages = document.getElementById('chat-messages');
+    const quickButtons = document.querySelectorAll('.quick-btn');
+
+    function createAIParticles() {
+        const particleContainer = document.createElement('div');
+        particleContainer.className = 'ai-particles';
+        particleContainer.innerHTML = `
+            <style>
+            .ai-particles {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                z-index: -1;
+                overflow: hidden;
+            }
+            .ai-particle {
+                position: absolute;
+                width: 2px;
+                height: 2px;
+                background: rgba(0, 255, 255, 0.6);
+                border-radius: 50%;
+                animation: float 10s infinite linear;
+            }
+            @keyframes float {
+                0% {
+                    transform: translateY(100vh) rotate(0deg);
+                    opacity: 0;
+                }
+                10% {
+                    opacity: 1;
+                }
+                90% {
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(-100px) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+            </style>
+        `;
+        
+        document.body.appendChild(particleContainer);
+        
+        // Créer des particules
+        setInterval(() => {
+            if (document.querySelectorAll('.ai-particle').length < 50) {
+                const particle = document.createElement('div');
+                particle.className = 'ai-particle';
+                particle.style.left = Math.random() * window.innerWidth + 'px';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.animationDuration = (10 + Math.random() * 5) + 's';
+                
+                // Supprimer la particule après l'animation
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
+                }, 15000);
+                
+                particleContainer.appendChild(particle);
+            }
+        }, 200);
+    }
 
     function addMessage(content, isUser = false) {
         const messageDiv = document.createElement('div');
@@ -594,7 +982,17 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         
+        // Animation d'apparition
+        messageDiv.style.opacity = '0';
+        messageDiv.style.transform = 'translateY(20px)';
         chatMessages.appendChild(messageDiv);
+        
+        setTimeout(() => {
+            messageDiv.style.transition = 'all 0.3s ease';
+            messageDiv.style.opacity = '1';
+            messageDiv.style.transform = 'translateY(0)';
+        }, 10);
+        
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
@@ -604,7 +1002,25 @@ document.addEventListener('DOMContentLoaded', function() {
         addMessage(message, true);
         chatInput.value = '';
         
-        // Simuler une réponse de l'IA (à remplacer par l'API réelle)
+        // Indicateur de frappe
+        const typingIndicator = document.createElement('div');
+        typingIndicator.className = 'ai-message typing-indicator';
+        typingIndicator.innerHTML = `
+            <div class="message-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="message-content">
+                <div class="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        `;
+        chatMessages.appendChild(typingIndicator);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        // Simuler une réponse de l'IA
         setTimeout(() => {
             fetch('/api/chatbot', {
                 method: 'POST',
@@ -618,6 +1034,9 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => response.json())
             .then(data => {
+                // Supprimer l'indicateur de frappe
+                chatMessages.removeChild(typingIndicator);
+                
                 if (data.success) {
                     addMessage(data.chatbot_response.response);
                 } else {
@@ -625,10 +1044,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => {
+                chatMessages.removeChild(typingIndicator);
                 console.error('Error:', error);
                 addMessage("Désolé, je ne suis pas disponible pour le moment. Veuillez réessayer plus tard.");
             });
-        }, 500);
+        }, 1000 + Math.random() * 2000); // Délai variable pour plus de réalisme
     }
 
     sendButton.addEventListener('click', () => {
@@ -660,12 +1080,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const difficulty = difficultySelect.value;
         
         if (!courseId) {
+            // Animation d'erreur
+            courseSelect.style.borderColor = '#ff0000';
+            setTimeout(() => {
+                courseSelect.style.borderColor = 'var(--accent-color)';
+            }, 1000);
             alert('Veuillez sélectionner un cours');
             return;
         }
 
         generateButton.disabled = true;
-        generateButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Génération...';
+        generateButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Génération en cours...';
 
         fetch(`/api/generate-exercise?lesson_id=${courseId}&difficulty=${difficulty}`)
             .then(response => response.json())
@@ -673,6 +1098,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.success) {
                     exerciseContent.textContent = data.exercise.content;
                     exerciseContainer.style.display = 'block';
+                    
+                    // Animation d'apparition
+                    exerciseContainer.style.opacity = '0';
+                    exerciseContainer.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        exerciseContainer.style.transition = 'all 0.5s ease';
+                        exerciseContainer.style.opacity = '1';
+                        exerciseContainer.style.transform = 'translateY(0)';
+                    }, 10);
                 } else {
                     alert('Erreur lors de la génération de l\'exercice');
                 }
@@ -692,10 +1126,139 @@ document.addEventListener('DOMContentLoaded', function() {
         generateButton.click();
     });
 
-    // Save exercise (placeholder)
+    // Save exercise
     document.getElementById('save-exercise').addEventListener('click', () => {
+        // Animation de succès
+        const saveBtn = document.getElementById('save-exercise');
+        const originalText = saveBtn.innerHTML;
+        saveBtn.innerHTML = '<i class="fas fa-check"></i> Sauvegardé !';
+        saveBtn.style.background = '#00ff00';
+        
+        setTimeout(() => {
+            saveBtn.innerHTML = originalText;
+            saveBtn.style.background = '';
+        }, 2000);
+        
         alert('Exercice sauvegardé ! (Fonctionnalité à implémenter)');
+    });
+
+    // Animation pour les sections qui apparaissent au scroll
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.animation = 'slideInUp 0.6s ease-out';
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.ai-section').forEach(section => {
+        observer.observe(section);
     });
 });
 </script>
+
+<style>
+/* Indicateur de frappe pour le chatbot */
+.typing-indicator .message-content {
+    padding: 1rem !important;
+}
+
+.typing-dots {
+    display: flex;
+    gap: 0.3rem;
+    align-items: center;
+}
+
+.typing-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    animation: typing 1.4s infinite ease-in-out;
+}
+
+.typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+.typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes typing {
+    0%, 80%, 100% {
+        transform: scale(0);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Amélioration des boutons avec des effets */
+.btn-generate:hover, .btn-retry:hover, .btn-save:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+}
+
+.btn-generate:active, .btn-retry:active, .btn-save:active {
+    transform: scale(0.98);
+}
+
+/* Effet de pulsation pour les éléments importants */
+.section-title i {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+/* Amélioration responsive avec effet glitch préservé */
+@media (max-width: 768px) {
+    .ai-dashboard {
+        padding: 1rem;
+    }
+    
+    .cyber-title {
+        font-size: 2.5rem;
+    }
+    
+    .ai-glitch-title {
+        font-size: 0.9em;
+        letter-spacing: 0.05em;
+    }
+    
+    /* Préserver les effets glitch sur mobile */
+    .glitch-layer:nth-child(1),
+    .glitch-layer:nth-child(2),
+    .glitch-layer:nth-child(3) {
+        animation-duration: 3s, 3.5s, 2.8s;
+    }
+    
+    .recommendations-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .analysis-overview {
+        grid-template-columns: 1fr;
+    }
+    
+    .generator-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .quick-actions {
+        justify-content: center;
+    }
+    
+    .chat-messages {
+        max-height: 250px;
+    }
+}
+</style>
 {% endblock %}

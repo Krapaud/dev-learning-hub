@@ -48,6 +48,32 @@
 - **Effet Matrix** en arrière-plan
 - **Interface utilisateur** intuitive et moderne
 
+## 🤖 Fonctionnalités IA Implémentées
+
+### Dashboard IA Intelligent
+- **Recommandations Personnalisées** : Suggestions de cours adaptées au profil utilisateur
+- **Analyse de Progression** : Évaluation intelligente des forces et faiblesses
+- **Assistant IA Contextuel** : Aide en temps réel pour les questions d'apprentissage
+- **Générateur d'Exercices** : Création automatique d'exercices adaptatifs
+- **Chatbot 24/7** : Support intelligent avec réponses contextuelles
+
+### Caractéristiques Techniques IA
+- **Machine Learning** : Utilisation de scikit-learn pour l'analyse des patterns
+- **Vectorisation TF-IDF** : Analyse sémantique des contenus de cours
+- **Recommandations Collaboratives** : Algorithmes de similarité cosinus
+- **Interface Futuriste** : Effets de particules et animations cyberpunk
+- **API REST** : Endpoints dédiés pour toutes les fonctionnalités IA
+
+### APIs IA Disponibles
+```
+GET  /ai-dashboard              # Dashboard principal IA
+GET  /api/recommendations       # Recommandations personnalisées
+GET  /api/ai-help              # Aide contextuelle
+GET  /api/difficulty-analysis   # Analyse des difficultés
+GET  /api/generate-exercise     # Génération d'exercices
+POST /api/chatbot              # Chatbot intelligent
+```
+
 ## 🚀 Installation et Configuration
 
 ### Prérequis
