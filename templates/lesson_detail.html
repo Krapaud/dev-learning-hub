@@ -33,6 +33,147 @@
     </div>
 
     <div class="lesson-content">
+        <!-- Section d'introduction enrichie -->
+        <div class="lesson-introduction">
+            <div class="intro-grid">
+                <div class="lesson-overview">
+                    <h2><i class="fas fa-lightbulb"></i> Aperçu de la leçon</h2>
+                    <div class="lesson-description">
+                        {% if lesson.course.name == "Shell/Terminal" %}
+                            {% if lesson.order == 1 %}
+                                <p>Cette première leçon vous introduit aux concepts fondamentaux du terminal. Vous apprendrez à naviguer dans votre système de fichiers et à exécuter des commandes de base.</p>
+                                <p><strong>Pourquoi c'est important :</strong> Le terminal est votre meilleur ami en tant que développeur. Il vous donne un contrôle total sur votre environnement de travail.</p>
+                            {% elif lesson.order == 2 %}
+                                <p>Apprenez à manipuler les fichiers et dossiers efficacement depuis le terminal. Ces compétences sont essentielles pour organiser vos projets de développement.</p>
+                                <p><strong>Applications pratiques :</strong> Création d'architectures de projets, organisation du code, gestion des assets.</p>
+                            {% else %}
+                                <p>Cette leçon approfondit les concepts du terminal et vous donne les outils pour devenir plus efficace dans votre travail quotidien.</p>
+                            {% endif %}
+                        {% elif lesson.course.name == "HTML5" %}
+                            {% if lesson.order == 1 %}
+                                <p>Découvrez la structure fondamentale d'une page web avec HTML5. Vous créerez votre première page et comprendrez l'architecture du web moderne.</p>
+                                <p><strong>Évolution :</strong> HTML5 apporte de nouvelles balises sémantiques qui améliorent l'accessibilité et le SEO de vos sites.</p>
+                            {% else %}
+                                <p>Approfondissez vos connaissances HTML5 avec des techniques avancées et des bonnes pratiques professionnelles.</p>
+                            {% endif %}
+                        {% elif lesson.course.name == "CSS3" %}
+                            {% if lesson.order == 1 %}
+                                <p>Plongez dans le monde du design web avec CSS3. Apprenez à transformer vos pages HTML en interfaces visuellement attrayantes.</p>
+                                <p><strong>Design moderne :</strong> CSS3 permet de créer des interfaces qui rivalisent avec les applications natives.</p>
+                            {% else %}
+                                <p>Maîtrisez les techniques CSS avancées pour créer des designs professionnels et responsives.</p>
+                            {% endif %}
+                        {% elif lesson.course.name == "JavaScript" %}
+                            {% if lesson.order == 1 %}
+                                <p>Découvrez JavaScript, le langage qui donne vie au web. Vous créerez vos premières interactions et comprendrez la programmation web.</p>
+                                <p><strong>Universalité :</strong> JavaScript s'exécute partout - navigateur, serveur, mobile, IoT.</p>
+                            {% else %}
+                                <p>Approfondissez JavaScript avec des concepts avancés et des patterns de développement modernes.</p>
+                            {% endif %}
+                        {% elif lesson.course.name == "Git" %}
+                            {% if lesson.order == 1 %}
+                                <p>Initiez-vous au contrôle de version avec Git. Apprenez à sauvegarder et gérer l'évolution de votre code comme un professionnel.</p>
+                                <p><strong>Collaboration :</strong> Git est l'outil qui permet aux équipes de développement de travailler ensemble efficacement.</p>
+                            {% else %}
+                                <p>Maîtrisez Git pour devenir autonome dans la gestion de vos projets et la collaboration en équipe.</p>
+                            {% endif %}
+                        {% else %}
+                            <p>{{ lesson.content[:200] }}{% if lesson.content|length > 200 %}...{% endif %}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="lesson-objectives">
+                    <h3><i class="fas fa-target"></i> Objectifs</h3>
+                    <ul class="objectives-list">
+                        {% if lesson.course.name == "Shell/Terminal" %}
+                            {% if lesson.order == 1 %}
+                                <li>Comprendre ce qu'est un terminal et son utilité</li>
+                                <li>Exécuter vos premières commandes</li>
+                                <li>Naviguer dans l'arborescence des fichiers</li>
+                                <li>Utiliser l'aide intégrée (man pages)</li>
+                            {% elif lesson.order == 2 %}
+                                <li>Créer et organiser des dossiers</li>
+                                <li>Manipuler des fichiers efficacement</li>
+                                <li>Comprendre les chemins relatifs et absolus</li>
+                                <li>Utiliser les raccourcis de navigation</li>
+                            {% else %}
+                                <li>Approfondir les commandes essentielles</li>
+                                <li>Automatiser des tâches courantes</li>
+                                <li>Comprendre les concepts avancés</li>
+                            {% endif %}
+                        {% elif lesson.course.name == "HTML5" %}
+                            {% if lesson.order == 1 %}
+                                <li>Créer votre première page HTML5</li>
+                                <li>Comprendre la structure d'un document</li>
+                                <li>Utiliser les balises essentielles</li>
+                                <li>Respecter les standards du web</li>
+                            {% else %}
+                                <li>Maîtriser les éléments HTML5 avancés</li>
+                                <li>Structurer du contenu complexe</li>
+                                <li>Optimiser pour l'accessibilité</li>
+                            {% endif %}
+                        {% elif lesson.course.name == "CSS3" %}
+                            {% if lesson.order == 1 %}
+                                <li>Appliquer vos premiers styles</li>
+                                <li>Comprendre les sélecteurs CSS</li>
+                                <li>Gérer les couleurs et typographies</li>
+                                <li>Structurer votre code CSS</li>
+                            {% else %}
+                                <li>Maîtriser les layouts avancés</li>
+                                <li>Créer des animations CSS</li>
+                                <li>Optimiser les performances</li>
+                            {% endif %}
+                        {% elif lesson.course.name == "JavaScript" %}
+                            {% if lesson.order == 1 %}
+                                <li>Écrire vos premiers scripts JavaScript</li>
+                                <li>Comprendre les variables et fonctions</li>
+                                <li>Manipuler le DOM de base</li>
+                                <li>Gérer les événements utilisateur</li>
+                            {% else %}
+                                <li>Maîtriser les concepts avancés</li>
+                                <li>Développer des applications interactives</li>
+                                <li>Gérer l'asynchrone efficacement</li>
+                            {% endif %}
+                        {% elif lesson.course.name == "Git" %}
+                            {% if lesson.order == 1 %}
+                                <li>Initialiser votre premier repository</li>
+                                <li>Comprendre les concepts Git fondamentaux</li>
+                                <li>Effectuer vos premiers commits</li>
+                                <li>Suivre l'évolution de votre code</li>
+                            {% else %}
+                                <li>Maîtriser les branches et merges</li>
+                                <li>Collaborer avec d'autres développeurs</li>
+                                <li>Gérer les conflits efficacement</li>
+                            {% endif %}
+                        {% else %}
+                            <li>Comprendre les concepts clés</li>
+                            <li>Appliquer la théorie en pratique</li>
+                            <li>Développer de bonnes habitudes</li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <div class="lesson-duration">
+                    <h3><i class="fas fa-clock"></i> Durée estimée</h3>
+                    <div class="time-breakdown">
+                        <div class="time-item">
+                            <span class="time-icon">📖</span>
+                            <span>Lecture : 15-20 min</span>
+                        </div>
+                        <div class="time-item">
+                            <span class="time-icon">💻</span>
+                            <span>Pratique : 20-30 min</span>
+                        </div>
+                        <div class="time-item">
+                            <span class="time-icon">🎯</span>
+                            <span>Total : ~45 min</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="content-section">
             <h2><i class="fas fa-book-open"></i> Contenu de la leçon</h2>
             <div class="lesson-text">
@@ -151,6 +292,255 @@ for fruit in fruits:<br>
                     {% endif %}
                 </div>
             {% endif %}
+
+            <!-- Section Points clés et bonnes pratiques -->
+            <div class="key-concepts-section">
+                <h3><i class="fas fa-key"></i> Points clés à retenir</h3>
+                <div class="concepts-grid">
+                    {% if lesson.course.name == "Shell/Terminal" %}
+                        {% if lesson.order == 1 %}
+                            <div class="concept-card">
+                                <div class="concept-icon">🗂️</div>
+                                <h4>Navigation</h4>
+                                <p>Le terminal vous permet de naviguer dans votre système plus rapidement qu'une interface graphique.</p>
+                            </div>
+                            <div class="concept-card">
+                                <div class="concept-icon">📖</div>
+                                <h4>Manuel</h4>
+                                <p>Utilisez <code>man [commande]</code> pour accéder à la documentation de n'importe quelle commande.</p>
+                            </div>
+                            <div class="concept-card">
+                                <div class="concept-icon">⚡</div>
+                                <h4>Efficacité</h4>
+                                <p>Les raccourcis clavier et l'autocomplétion (Tab) accélèrent considérablement votre travail.</p>
+                            </div>
+                        {% elif lesson.order == 2 %}
+                            <div class="concept-card">
+                                <div class="concept-icon">📁</div>
+                                <h4>Organisation</h4>
+                                <p>Une bonne structure de dossiers facilite la maintenance de vos projets.</p>
+                            </div>
+                            <div class="concept-card">
+                                <div class="concept-icon">🔄</div>
+                                <h4>Chemins</h4>
+                                <p>Maîtrisez les chemins relatifs (./, ../) et absolus (/home/user/) pour naviguer efficacement.</p>
+                            </div>
+                        {% endif %}
+                    {% elif lesson.course.name == "HTML5" %}
+                        {% if lesson.order == 1 %}
+                            <div class="concept-card">
+                                <div class="concept-icon">🏗️</div>
+                                <h4>Structure</h4>
+                                <p>HTML5 structure le contenu avec des balises sémantiques pour une meilleure accessibilité.</p>
+                            </div>
+                            <div class="concept-card">
+                                <div class="concept-icon">🌐</div>
+                                <h4>Standards</h4>
+                                <p>Respecter les standards W3C garantit la compatibilité avec tous les navigateurs.</p>
+                            </div>
+                            <div class="concept-card">
+                                <div class="concept-icon">♿</div>
+                                <h4>Accessibilité</h4>
+                                <p>Un HTML bien structuré rend votre site accessible à tous les utilisateurs.</p>
+                            </div>
+                        {% endif %}
+                    {% elif lesson.course.name == "CSS3" %}
+                        {% if lesson.order == 1 %}
+                            <div class="concept-card">
+                                <div class="concept-icon">🎨</div>
+                                <h4>Sélecteurs</h4>
+                                <p>Les sélecteurs CSS déterminent quels éléments styliser avec précision.</p>
+                            </div>
+                            <div class="concept-card">
+                                <div class="concept-icon">📱</div>
+                                <h4>Responsive</h4>
+                                <p>Dès le début, pensez à adapter vos designs pour tous les écrans.</p>
+                            </div>
+                            <div class="concept-card">
+                                <div class="concept-icon">⚡</div>
+                                <h4>Performance</h4>
+                                <p>Un CSS optimisé améliore les temps de chargement de votre site.</p>
+                            </div>
+                        {% endif %}
+                    {% elif lesson.course.name == "JavaScript" %}
+                        {% if lesson.order == 1 %}
+                            <div class="concept-card">
+                                <div class="concept-icon">🔄</div>
+                                <h4>Interactivité</h4>
+                                <p>JavaScript transforme des pages statiques en applications interactives.</p>
+                            </div>
+                            <div class="concept-card">
+                                <div class="concept-icon">🎯</div>
+                                <h4>DOM</h4>
+                                <p>La manipulation du DOM permet de modifier le contenu en temps réel.</p>
+                            </div>
+                            <div class="concept-card">
+                                <div class="concept-icon">🐛</div>
+                                <h4>Debugging</h4>
+                                <p>Les outils de développement du navigateur sont essentiels pour déboguer.</p>
+                            </div>
+                        {% endif %}
+                    {% elif lesson.course.name == "Git" %}
+                        {% if lesson.order == 1 %}
+                            <div class="concept-card">
+                                <div class="concept-icon">📸</div>
+                                <h4>Commits</h4>
+                                <p>Chaque commit est un instantané de votre projet à un moment donné.</p>
+                            </div>
+                            <div class="concept-card">
+                                <div class="concept-icon">🌳</div>
+                                <h4>Historique</h4>
+                                <p>Git conserve tout l'historique de vos modifications pour une traçabilité complète.</p>
+                            </div>
+                            <div class="concept-card">
+                                <div class="concept-icon">🤝</div>
+                                <h4>Collaboration</h4>
+                                <p>Git facilite le travail en équipe en gérant les contributions de chacun.</p>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Section Erreurs courantes et solutions -->
+            <div class="troubleshooting-section">
+                <h3><i class="fas fa-exclamation-triangle"></i> Erreurs courantes et solutions</h3>
+                <div class="troubleshooting-list">
+                    {% if lesson.course.name == "Shell/Terminal" %}
+                        {% if lesson.order == 1 %}
+                            <div class="error-item">
+                                <div class="error-title">
+                                    <i class="fas fa-times-circle"></i>
+                                    <strong>Commande non reconnue</strong>
+                                </div>
+                                <div class="error-solution">
+                                    <p><strong>Problème :</strong> "command not found"</p>
+                                    <p><strong>Solution :</strong> Vérifiez l'orthographe ou utilisez <code>which [commande]</code> pour voir si elle est installée.</p>
+                                </div>
+                            </div>
+                            <div class="error-item">
+                                <div class="error-title">
+                                    <i class="fas fa-times-circle"></i>
+                                    <strong>Permission refusée</strong>
+                                </div>
+                                <div class="error-solution">
+                                    <p><strong>Problème :</strong> "Permission denied"</p>
+                                    <p><strong>Solution :</strong> Utilisez <code>sudo</code> pour les privilèges administrateur ou vérifiez les permissions avec <code>ls -la</code>.</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% elif lesson.course.name == "HTML5" %}
+                        {% if lesson.order == 1 %}
+                            <div class="error-item">
+                                <div class="error-title">
+                                    <i class="fas fa-times-circle"></i>
+                                    <strong>Page blanche</strong>
+                                </div>
+                                <div class="error-solution">
+                                    <p><strong>Problème :</strong> La page ne s'affiche pas</p>
+                                    <p><strong>Solution :</strong> Vérifiez que vous avez bien la structure HTML de base et que le fichier est sauvegardé avec l'extension .html</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% elif lesson.course.name == "CSS3" %}
+                        {% if lesson.order == 1 %}
+                            <div class="error-item">
+                                <div class="error-title">
+                                    <i class="fas fa-times-circle"></i>
+                                    <strong>Styles non appliqués</strong>
+                                </div>
+                                <div class="error-solution">
+                                    <p><strong>Problème :</strong> Les styles CSS ne s'affichent pas</p>
+                                    <p><strong>Solution :</strong> Vérifiez le lien vers votre fichier CSS et la syntaxe de vos sélecteurs.</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Section Pour aller plus loin -->
+            <div class="further-learning-section">
+                <h3><i class="fas fa-rocket"></i> Pour aller plus loin</h3>
+                <div class="resources-list">
+                    {% if lesson.course.name == "Shell/Terminal" %}
+                        <div class="resource-item">
+                            <i class="fas fa-external-link-alt"></i>
+                            <div>
+                                <h4>Bash Scripting Guide</h4>
+                                <p>Approfondissez avec l'automatisation et les scripts bash</p>
+                            </div>
+                        </div>
+                        <div class="resource-item">
+                            <i class="fas fa-external-link-alt"></i>
+                            <div>
+                                <h4>Linux Command Line</h4>
+                                <p>Explorez les commandes avancées et les outils système</p>
+                            </div>
+                        </div>
+                    {% elif lesson.course.name == "HTML5" %}
+                        <div class="resource-item">
+                            <i class="fas fa-external-link-alt"></i>
+                            <div>
+                                <h4>Web Accessibility Guidelines</h4>
+                                <p>Créez des sites accessibles à tous les utilisateurs</p>
+                            </div>
+                        </div>
+                        <div class="resource-item">
+                            <i class="fas fa-external-link-alt"></i>
+                            <div>
+                                <h4>HTML5 APIs</h4>
+                                <p>Découvrez les APIs natives du navigateur</p>
+                            </div>
+                        </div>
+                    {% elif lesson.course.name == "CSS3" %}
+                        <div class="resource-item">
+                            <i class="fas fa-external-link-alt"></i>
+                            <div>
+                                <h4>CSS Grid Garden</h4>
+                                <p>Jeu interactif pour maîtriser CSS Grid</p>
+                            </div>
+                        </div>
+                        <div class="resource-item">
+                            <i class="fas fa-external-link-alt"></i>
+                            <div>
+                                <h4>CSS Animation Library</h4>
+                                <p>Inspirez-vous des meilleures animations CSS</p>
+                            </div>
+                        </div>
+                    {% elif lesson.course.name == "JavaScript" %}
+                        <div class="resource-item">
+                            <i class="fas fa-external-link-alt"></i>
+                            <div>
+                                <h4>JavaScript30</h4>
+                                <p>30 projets en 30 jours pour pratiquer</p>
+                            </div>
+                        </div>
+                        <div class="resource-item">
+                            <i class="fas fa-external-link-alt"></i>
+                            <div>
+                                <h4>Modern JavaScript Features</h4>
+                                <p>Explorez ES6+ et les dernières fonctionnalités</p>
+                            </div>
+                        </div>
+                    {% elif lesson.course.name == "Git" %}
+                        <div class="resource-item">
+                            <i class="fas fa-external-link-alt"></i>
+                            <div>
+                                <h4>Git Workflows</h4>
+                                <p>Apprenez les workflows professionnels (GitFlow, etc.)</p>
+                            </div>
+                        </div>
+                        <div class="resource-item">
+                            <i class="fas fa-external-link-alt"></i>
+                            <div>
+                                <h4>Advanced Git</h4>
+                                <p>Techniques avancées : rebase, cherry-pick, hooks</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
 
             <div class="tips-section">
                 <h3><i class="fas fa-lightbulb"></i> Conseils pratiques</h3>

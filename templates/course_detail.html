@@ -51,6 +51,99 @@
         </div>
     </div>
 
+    <!-- Section de présentation enrichie -->
+    <div class="course-overview-section">
+        <div class="overview-grid">
+            <div class="course-introduction">
+                <h2><i class="fas fa-info-circle"></i> À propos de ce cours</h2>
+                <div class="intro-content">
+                    {% if course.id == 1 %}
+                        <p>Le terminal est l'interface en ligne de commande qui vous permet d'interagir directement avec votre système d'exploitation. C'est un outil fondamental que tout développeur doit maîtriser car il offre une puissance et une flexibilité inégalées.</p>
+                        <p><strong>Pourquoi apprendre le terminal ?</strong> Il vous permettra d'automatiser des tâches, de gérer des serveurs distants, d'utiliser des outils de développement avancés et de travailler efficacement dans n'importe quel environnement de développement.</p>
+                    {% elif course.id == 2 %}
+                        <p>HTML5 est la dernière version du langage de balisage qui structure le web. Il apporte de nouvelles balises sémantiques, des APIs puissantes et une meilleure intégration multimédia.</p>
+                        <p><strong>L'évolution du web</strong> : HTML5 révolutionne la façon dont nous créons des sites web en offrant des fonctionnalités natives pour la vidéo, l'audio, le stockage local et bien plus encore, réduisant ainsi la dépendance aux plugins externes.</p>
+                    {% elif course.id == 3 %}
+                        <p>CSS3 transforme vos pages HTML en interfaces visuellement attrayantes et fonctionnelles. Il introduit des fonctionnalités avancées comme les animations, les transformations et les layouts flexibles.</p>
+                        <p><strong>Le design moderne</strong> : Avec CSS3, vous pouvez créer des interfaces responsives qui s'adaptent à tous les écrans, des smartphones aux écrans ultra-larges, tout en maintenant une expérience utilisateur optimale.</p>
+                    {% elif course.id == 4 %}
+                        <p>JavaScript est le langage de programmation qui donne vie au web. Il permet de créer des interactions dynamiques, de manipuler le contenu en temps réel et de développer des applications complètes.</p>
+                        <p><strong>Un langage universel</strong> : JavaScript s'exécute partout - dans le navigateur, sur le serveur avec Node.js, dans les applications mobiles et même dans l'IoT. C'est devenu l'un des langages les plus demandés au monde.</p>
+                    {% elif course.id == 5 %}
+                        <p>Git est le système de contrôle de version le plus utilisé au monde. Il permet de suivre les modifications de votre code, de collaborer avec d'autres développeurs et de gérer l'historique de vos projets.</p>
+                        <p><strong>Collaboration moderne</strong> : Git facilite le travail en équipe, la gestion des versions et le déploiement de logiciels. C'est un outil indispensable dans l'écosystème de développement moderne.</p>
+                    {% else %}
+                        <p>{{ course.description }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="course-prerequisites">
+                <h3><i class="fas fa-list-check"></i> Prérequis</h3>
+                <ul class="prerequisites-list">
+                    {% if course.id == 1 %}
+                        <li>Aucun prérequis - cours accessible aux débutants</li>
+                        <li>Ordinateur avec système d'exploitation (Windows, macOS, Linux)</li>
+                        <li>Motivation pour apprendre les bases du développement</li>
+                    {% elif course.id == 2 %}
+                        <li>Connaissances de base en informatique</li>
+                        <li>Familiarité avec la navigation sur internet</li>
+                        <li>Éditeur de texte ou IDE installé</li>
+                    {% elif course.id == 3 %}
+                        <li>Maîtrise des bases HTML5</li>
+                        <li>Compréhension de la structure d'une page web</li>
+                        <li>Notions de design et d'esthétique (optionnel)</li>
+                    {% elif course.id == 4 %}
+                        <li>Solides bases en HTML5 et CSS3</li>
+                        <li>Logique de programmation (boucles, conditions)</li>
+                        <li>Patience pour déboguer du code !</li>
+                    {% elif course.id == 5 %}
+                        <li>Maîtrise du terminal/ligne de commande</li>
+                        <li>Expérience avec un projet de code</li>
+                        <li>Compréhension des concepts de fichiers et dossiers</li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <div class="learning-outcomes">
+                <h3><i class="fas fa-graduation-cap"></i> Ce que vous saurez faire</h3>
+                <ul class="outcomes-list">
+                    {% if course.id == 1 %}
+                        <li>Naviguer efficacement dans le système de fichiers</li>
+                        <li>Gérer les permissions et les utilisateurs</li>
+                        <li>Automatiser des tâches avec des scripts simples</li>
+                        <li>Utiliser des outils de développement en ligne de commande</li>
+                        <li>Surveiller et gérer les processus système</li>
+                    {% elif course.id == 2 %}
+                        <li>Créer des pages web structurées et sémantiques</li>
+                        <li>Intégrer du contenu multimédia (vidéo, audio)</li>
+                        <li>Développer des formulaires interactifs et accessibles</li>
+                        <li>Utiliser les APIs HTML5 modernes</li>
+                        <li>Optimiser vos pages pour le SEO</li>
+                    {% elif course.id == 3 %}
+                        <li>Designer des interfaces modernes et attractives</li>
+                        <li>Créer des layouts responsives avec Flexbox et Grid</li>
+                        <li>Animer vos interfaces avec CSS3</li>
+                        <li>Optimiser les performances de rendu</li>
+                        <li>Utiliser des méthodologies CSS professionnelles</li>
+                    {% elif course.id == 4 %}
+                        <li>Programmer des interactions utilisateur complexes</li>
+                        <li>Manipuler le DOM en temps réel</li>
+                        <li>Gérer l'asynchrone avec les Promises</li>
+                        <li>Déboguer efficacement votre code JavaScript</li>
+                        <li>Structurer des applications JavaScript modulaires</li>
+                    {% elif course.id == 5 %}
+                        <li>Gérer l'historique de vos projets de code</li>
+                        <li>Collaborer efficacement en équipe</li>
+                        <li>Résoudre les conflits de fusion</li>
+                        <li>Utiliser GitHub/GitLab professionnellement</li>
+                        <li>Mettre en place des workflows de développement</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
     <div class="lessons-section">
         <h2>
             <i class="fas fa-list"></i>
@@ -100,6 +193,146 @@
                 </div>
             </div>
             {% endfor %}
+        </div>
+    </div>
+
+    <!-- Section ressources et outils -->
+    <div class="course-resources-section">
+        <h2><i class="fas fa-toolbox"></i> Outils et ressources</h2>
+        <div class="resources-grid">
+            <div class="tools-section">
+                <h3><i class="fas fa-wrench"></i> Outils recommandés</h3>
+                <div class="tools-list">
+                    {% if course.id == 1 %}
+                        <div class="tool-item">
+                            <div class="tool-icon">🖥️</div>
+                            <div class="tool-info">
+                                <h4>Terminal natif</h4>
+                                <p>Terminal intégré de votre OS (CMD, PowerShell, bash)</p>
+                            </div>
+                        </div>
+                        <div class="tool-item">
+                            <div class="tool-icon">💻</div>
+                            <div class="tool-info">
+                                <h4>Windows Terminal</h4>
+                                <p>Terminal moderne pour Windows avec onglets et personnalisation</p>
+                            </div>
+                        </div>
+                    {% elif course.id == 2 %}
+                        <div class="tool-item">
+                            <div class="tool-icon">🔧</div>
+                            <div class="tool-info">
+                                <h4>VS Code</h4>
+                                <p>Éditeur gratuit avec excellent support HTML5</p>
+                            </div>
+                        </div>
+                        <div class="tool-item">
+                            <div class="tool-icon">🌐</div>
+                            <div class="tool-info">
+                                <h4>Live Server</h4>
+                                <p>Extension pour prévisualiser vos pages en temps réel</p>
+                            </div>
+                        </div>
+                    {% elif course.id == 3 %}
+                        <div class="tool-item">
+                            <div class="tool-icon">🎨</div>
+                            <div class="tool-info">
+                                <h4>Chrome DevTools</h4>
+                                <p>Outils de développement pour déboguer CSS</p>
+                            </div>
+                        </div>
+                        <div class="tool-item">
+                            <div class="tool-icon">📱</div>
+                            <div class="tool-info">
+                                <h4>Responsive Design Mode</h4>
+                                <p>Testez vos designs sur différentes tailles d'écran</p>
+                            </div>
+                        </div>
+                    {% elif course.id == 4 %}
+                        <div class="tool-item">
+                            <div class="tool-icon">🔍</div>
+                            <div class="tool-info">
+                                <h4>Browser DevTools</h4>
+                                <p>Console JavaScript et débogueur intégré</p>
+                            </div>
+                        </div>
+                        <div class="tool-item">
+                            <div class="tool-icon">📦</div>
+                            <div class="tool-info">
+                                <h4>Node.js & npm</h4>
+                                <p>Environnement d'exécution et gestionnaire de paquets</p>
+                            </div>
+                        </div>
+                    {% elif course.id == 5 %}
+                        <div class="tool-item">
+                            <div class="tool-icon">🌿</div>
+                            <div class="tool-info">
+                                <h4>Git</h4>
+                                <p>Outil de contrôle de version (installation requise)</p>
+                            </div>
+                        </div>
+                        <div class="tool-item">
+                            <div class="tool-icon">🐙</div>
+                            <div class="tool-info">
+                                <h4>GitHub Desktop</h4>
+                                <p>Interface graphique pour Git (optionnel)</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="references-section">
+                <h3><i class="fas fa-book-open"></i> Références et documentation</h3>
+                <div class="references-list">
+                    {% if course.id == 1 %}
+                        <div class="reference-item">
+                            <h4>🔗 Bash Manual</h4>
+                            <p>Documentation officielle du shell Bash</p>
+                        </div>
+                        <div class="reference-item">
+                            <h4>📚 Command Line Cheat Sheet</h4>
+                            <p>Aide-mémoire des commandes essentielles</p>
+                        </div>
+                    {% elif course.id == 2 %}
+                        <div class="reference-item">
+                            <h4>🔗 MDN HTML Reference</h4>
+                            <p>Documentation complète des éléments HTML5</p>
+                        </div>
+                        <div class="reference-item">
+                            <h4>📋 HTML5 Validator</h4>
+                            <p>Outil pour valider la conformité de votre code</p>
+                        </div>
+                    {% elif course.id == 3 %}
+                        <div class="reference-item">
+                            <h4>🔗 CSS Reference MDN</h4>
+                            <p>Guide complet des propriétés CSS3</p>
+                        </div>
+                        <div class="reference-item">
+                            <h4>🎮 Flexbox Froggy</h4>
+                            <p>Jeu interactif pour apprendre Flexbox</p>
+                        </div>
+                    {% elif course.id == 4 %}
+                        <div class="reference-item">
+                            <h4>🔗 JavaScript MDN</h4>
+                            <p>Documentation officielle de JavaScript</p>
+                        </div>
+                        <div class="reference-item">
+                            <h4>📖 You Don't Know JS</h4>
+                            <p>Série de livres approfondis sur JavaScript</p>
+                        </div>
+                    {% elif course.id == 5 %}
+                        <div class="reference-item">
+                            <h4>🔗 Git Documentation</h4>
+                            <p>Guide officiel et complet de Git</p>
+                        </div>
+                        <div class="reference-item">
+                            <h4>🎯 Git Workflow Guide</h4>
+                            <p>Meilleures pratiques pour le travail en équipe</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 
