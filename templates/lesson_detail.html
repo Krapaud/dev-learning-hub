@@ -41,41 +41,95 @@
                     <div class="lesson-description">
                         {% if lesson.course.name == "Shell/Terminal" %}
                             {% if lesson.order == 1 %}
-                                <p>Cette première leçon vous introduit aux concepts fondamentaux du terminal. Vous apprendrez à naviguer dans votre système de fichiers et à exécuter des commandes de base.</p>
-                                <p><strong>Pourquoi c'est important :</strong> Le terminal est votre meilleur ami en tant que développeur. Il vous donne un contrôle total sur votre environnement de travail.</p>
+                                <p><strong>🤔 Qu'est-ce qu'un terminal ?</strong><br>
+                                Imaginez le terminal comme une conversation directe avec votre ordinateur. Au lieu de cliquer sur des icônes, vous tapez des commandes en texte, comme donner des instructions vocales à un assistant.</p>
+                                
+                                <p><strong>📱 Analogie simple :</strong><br>
+                                Si votre bureau habituel (avec ses icônes et fenêtres) est comme un centre commercial où vous vous promenez, le terminal est comme un service de conciergerie où vous dites exactement ce que vous voulez : "Emmène-moi au magasin de chaussures" au lieu de chercher partout.</p>
+                                
+                                <p><strong>🎯 Pourquoi apprendre ça ?</strong><br>
+                                • C'est plus rapide une fois maîtrisé (comme les raccourcis clavier)<br>
+                                • Tous les professionnels l'utilisent quotidiennement<br>
+                                • Ça marche sur tous les ordinateurs (Windows, Mac, Linux)<br>
+                                • C'est indispensable pour programmer</p>
                             {% elif lesson.order == 2 %}
-                                <p>Apprenez à manipuler les fichiers et dossiers efficacement depuis le terminal. Ces compétences sont essentielles pour organiser vos projets de développement.</p>
-                                <p><strong>Applications pratiques :</strong> Création d'architectures de projets, organisation du code, gestion des assets.</p>
+                                <p><strong>📁 Gérer ses fichiers comme un pro</strong><br>
+                                Dans cette leçon, vous allez apprendre à organiser vos fichiers et dossiers depuis le terminal. C'est comme apprendre à ranger votre chambre, mais en version super-efficace !</p>
+                                
+                                <p><strong>🏠 Analogie de la maison :</strong><br>
+                                Votre ordinateur est comme une grande maison. Le terminal vous permet de vous déplacer de pièce en pièce (dossiers), d'ouvrir les tiroirs (fichiers), et de réorganiser vos affaires beaucoup plus rapidement qu'en marchant partout.</p>
+                                
+                                <p><strong>💡 Ce que vous gagnerez :</strong><br>
+                                • Créer l'organisation parfaite pour vos projets<br>
+                                • Retrouver n'importe quel fichier en secondes<br>
+                                • Impressionner vos collègues avec votre efficacité<br>
+                                • Préparer le terrain pour devenir développeur</p>
                             {% else %}
-                                <p>Cette leçon approfondit les concepts du terminal et vous donne les outils pour devenir plus efficace dans votre travail quotidien.</p>
+                                <p>Cette leçon vous donne des super-pouvoirs supplémentaires avec le terminal. Vous deviendrez de plus en plus efficace !</p>
                             {% endif %}
                         {% elif lesson.course.name == "HTML5" %}
                             {% if lesson.order == 1 %}
-                                <p>Découvrez la structure fondamentale d'une page web avec HTML5. Vous créerez votre première page et comprendrez l'architecture du web moderne.</p>
-                                <p><strong>Évolution :</strong> HTML5 apporte de nouvelles balises sémantiques qui améliorent l'accessibilité et le SEO de vos sites.</p>
+                                <p><strong>🌐 Votre première page web !</strong><br>
+                                HTML, c'est comme apprendre l'alphabet du web. Chaque site internet que vous visitez (Google, Facebook, YouTube) est construit avec HTML. Aujourd'hui, vous allez créer votre première page !</p>
+                                
+                                <p><strong>🏗️ Analogie de construction :</strong><br>
+                                Si un site web était une maison, HTML serait la structure : les murs, les portes, les fenêtres. CSS (qu'on verra plus tard) serait la peinture et la décoration, et JavaScript serait l'électricité qui fait fonctionner tout.</p>
+                                
+                                <p><strong>🎉 Pourquoi c'est génial :</strong><br>
+                                • Vous allez créer quelque chose de visible sur internet<br>
+                                • C'est la base de TOUS les sites web<br>
+                                • Vous comprendrez enfin comment marche internet<br>
+                                • C'est votre premier pas vers devenir développeur web</p>
                             {% else %}
-                                <p>Approfondissez vos connaissances HTML5 avec des techniques avancées et des bonnes pratiques professionnelles.</p>
+                                <p>Continuons à construire votre expertise HTML avec des éléments plus avancés et des techniques professionnelles !</p>
                             {% endif %}
                         {% elif lesson.course.name == "CSS3" %}
                             {% if lesson.order == 1 %}
-                                <p>Plongez dans le monde du design web avec CSS3. Apprenez à transformer vos pages HTML en interfaces visuellement attrayantes.</p>
-                                <p><strong>Design moderne :</strong> CSS3 permet de créer des interfaces qui rivalisent avec les applications natives.</p>
+                                <p><strong>🎨 Donnez du style à vos pages !</strong><br>
+                                CSS, c'est la magie qui transforme une page web toute blanche et ennuyeuse en quelque chose de beau et coloré. C'est comme être un décorateur d'intérieur pour internet !</p>
+                                
+                                <p><strong>🎭 Analogie du théâtre :</strong><br>
+                                HTML sont les acteurs sur scène, CSS sont les costumes, le maquillage, l'éclairage et les décors. Sans CSS, vos pages ressemblent à un document Word basique. Avec CSS, elles deviennent des œuvres d'art !</p>
+                                
+                                <p><strong>✨ Ce que vous allez découvrir :</strong><br>
+                                • Comment changer les couleurs et polices<br>
+                                • Organiser vos éléments sur la page<br>
+                                • Créer des effets visuels impressionnants<br>
+                                • Faire des sites qui s'adaptent aux téléphones</p>
                             {% else %}
-                                <p>Maîtrisez les techniques CSS avancées pour créer des designs professionnels et responsives.</p>
+                                <p>Approfondissons CSS avec des techniques qui vont faire briller vos sites web !</p>
                             {% endif %}
                         {% elif lesson.course.name == "JavaScript" %}
                             {% if lesson.order == 1 %}
-                                <p>Découvrez JavaScript, le langage qui donne vie au web. Vous créerez vos premières interactions et comprendrez la programmation web.</p>
-                                <p><strong>Universalité :</strong> JavaScript s'exécute partout - navigateur, serveur, mobile, IoT.</p>
+                                <p><strong>⚡ Donnez vie à vos pages !</strong><br>
+                                JavaScript, c'est ce qui rend les sites web interactifs. Sans JavaScript, une page web est comme une brochure. Avec JavaScript, elle devient comme une application sur votre téléphone !</p>
+                                
+                                <p><strong>🎮 Analogie du jeu vidéo :</strong><br>
+                                HTML est le décor du jeu, CSS ce sont les graphismes, et JavaScript c'est ce qui fait que les personnages bougent, que les boutons fonctionnent, et que tout répond à vos actions !</p>
+                                
+                                <p><strong>🚀 Vos super-pouvoirs JavaScript :</strong><br>
+                                • Faire réagir la page aux clics et mouvements<br>
+                                • Créer des animations et effets spéciaux<br>
+                                • Calculer et traiter des données en temps réel<br>
+                                • Transformer vos idées en applications web</p>
                             {% else %}
-                                <p>Approfondissez JavaScript avec des concepts avancés et des patterns de développement modernes.</p>
+                                <p>Explorons les fonctionnalités avancées de JavaScript pour créer des expériences web extraordinaires !</p>
                             {% endif %}
                         {% elif lesson.course.name == "Git" %}
                             {% if lesson.order == 1 %}
-                                <p>Initiez-vous au contrôle de version avec Git. Apprenez à sauvegarder et gérer l'évolution de votre code comme un professionnel.</p>
-                                <p><strong>Collaboration :</strong> Git est l'outil qui permet aux équipes de développement de travailler ensemble efficacement.</p>
+                                <p><strong>💾 Ne perdez plus jamais votre travail !</strong><br>
+                                Git, c'est comme avoir une machine à remonter le temps pour votre code. Vous pouvez revenir à n'importe quelle version précédente, voir qui a changé quoi, et travailler en équipe sans se marcher dessus !</p>
+                                
+                                <p><strong>📖 Analogie du livre :</strong><br>
+                                Imaginez que vous écrivez un livre. Git garde automatiquement une copie de chaque chapitre à chaque fois que vous le sauvegardez. Si vous cassez quelque chose, vous pouvez revenir à la version d'hier. Si vous travaillez avec un co-auteur, Git mélange vos changements automatiquement !</p>
+                                
+                                <p><strong>🛡️ Pourquoi c'est indispensable :</strong><br>
+                                • Sauvegarde automatique de tout votre travail<br>
+                                • Possibilité de revenir en arrière sans risque<br>
+                                • Collaboration facile avec d'autres développeurs<br>
+                                • Standard dans toutes les entreprises tech</p>
                             {% else %}
-                                <p>Maîtrisez Git pour devenir autonome dans la gestion de vos projets et la collaboration en équipe.</p>
+                                <p>Maîtrisons Git pour devenir des pros de la gestion de code et de la collaboration !</p>
                             {% endif %}
                         {% else %}
                             <p>{{ lesson.content[:200] }}{% if lesson.content|length > 200 %}...{% endif %}</p>
@@ -292,6 +346,230 @@ for fruit in fruits:<br>
                     {% endif %}
                 </div>
             {% endif %}
+
+            <!-- Section explications détaillées pour débutants -->
+            <div class="beginner-explanations">
+                <h3><i class="fas fa-graduation-cap"></i> Explications détaillées pour débutants</h3>
+                
+                {% if lesson.course.name == "Shell/Terminal" %}
+                    {% if lesson.order == 1 %}
+                        <div class="explanation-cards">
+                            <div class="explanation-card">
+                                <div class="card-header">
+                                    <span class="command-badge">pwd</span>
+                                    <h4>Où suis-je ? (Print Working Directory)</h4>
+                                </div>
+                                <div class="card-content">
+                                    <p><strong>Ce que ça fait :</strong> Affiche le nom du dossier où vous êtes actuellement.</p>
+                                    <p><strong>Analogie :</strong> C'est comme demander "Dans quelle pièce de la maison suis-je ?"</p>
+                                    <p><strong>Exemple de résultat :</strong> <code>/home/votrenom</code> (vous êtes dans votre dossier personnel)</p>
+                                    <p><strong>Pourquoi c'est utile :</strong> Avant de faire quoi que ce soit, il faut savoir où on est !</p>
+                                </div>
+                            </div>
+
+                            <div class="explanation-card">
+                                <div class="card-header">
+                                    <span class="command-badge">ls</span>
+                                    <h4>Qu'est-ce qu'il y a ici ? (List)</h4>
+                                </div>
+                                <div class="card-content">
+                                    <p><strong>Ce que ça fait :</strong> Montre tous les fichiers et dossiers du répertoire actuel.</p>
+                                    <p><strong>Analogie :</strong> C'est comme allumer la lumière dans une pièce pour voir ce qu'elle contient.</p>
+                                    <p><strong>Variantes utiles :</strong></p>
+                                    <ul>
+                                        <li><code>ls -l</code> : Vue détaillée avec les permissions et dates</li>
+                                        <li><code>ls -a</code> : Montre aussi les fichiers cachés (qui commencent par un point)</li>
+                                        <li><code>ls -la</code> : Combine les deux !</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="explanation-card">
+                                <div class="card-header">
+                                    <span class="command-badge">man</span>
+                                    <h4>Manuel d'utilisation (Manual)</h4>
+                                </div>
+                                <div class="card-content">
+                                    <p><strong>Ce que ça fait :</strong> Ouvre le manuel d'utilisation de n'importe quelle commande.</p>
+                                    <p><strong>Analogie :</strong> C'est comme avoir un dictionnaire ou un mode d'emploi pour chaque outil.</p>
+                                    <p><strong>Comment l'utiliser :</strong> Tapez <code>man</code> suivi du nom de la commande. Exemple : <code>man ls</code></p>
+                                    <p><strong>Astuce :</strong> Appuyez sur <code>q</code> pour quitter le manuel.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-by-step">
+                            <h4><i class="fas fa-list-ol"></i> Votre premier exercice étape par étape</h4>
+                            <div class="steps">
+                                <div class="step">
+                                    <div class="step-number">1</div>
+                                    <div class="step-content">
+                                        <h5>Ouvrez votre terminal</h5>
+                                        <p><strong>Sur Windows :</strong> Cherchez "cmd" ou "PowerShell" dans le menu démarrer</p>
+                                        <p><strong>Sur Mac :</strong> Appuyez Cmd+Espace et tapez "Terminal"</p>
+                                        <p><strong>Sur Linux :</strong> Ctrl+Alt+T ou cherchez "Terminal" dans vos applications</p>
+                                    </div>
+                                </div>
+
+                                <div class="step">
+                                    <div class="step-number">2</div>
+                                    <div class="step-content">
+                                        <h5>Découvrez où vous êtes</h5>
+                                        <p>Tapez exactement : <code>pwd</code> puis appuyez sur Entrée</p>
+                                        <p><strong>Ce que vous verrez :</strong> Le chemin de votre dossier actuel s'affiche</p>
+                                        <p><strong>C'est normal si :</strong> Vous voyez quelque chose comme <code>/Users/votrenom</code> ou <code>C:\Users\votrenom</code></p>
+                                    </div>
+                                </div>
+
+                                <div class="step">
+                                    <div class="step-number">3</div>
+                                    <div class="step-content">
+                                        <h5>Regardez ce qu'il y a autour de vous</h5>
+                                        <p>Tapez : <code>ls</code> (sur Mac/Linux) ou <code>dir</code> (sur Windows) puis Entrée</p>
+                                        <p><strong>Ce que vous verrez :</strong> La liste de vos dossiers et fichiers</p>
+                                        <p><strong>Reconnaissez-vous :</strong> Desktop, Documents, Downloads ? Ce sont vos dossiers habituels !</p>
+                                    </div>
+                                </div>
+
+                                <div class="step">
+                                    <div class="step-number">4</div>
+                                    <div class="step-content">
+                                        <h5>Demandez de l'aide</h5>
+                                        <p>Tapez : <code>man ls</code> (sur Mac/Linux) ou <code>help dir</code> (sur Windows)</p>
+                                        <p><strong>Ce que vous verrez :</strong> Toute la documentation de la commande</p>
+                                        <p><strong>Pour sortir :</strong> Appuyez sur la touche <code>q</code> (comme "quit")</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% elif lesson.order == 2 %}
+                        <div class="explanation-cards">
+                            <div class="explanation-card">
+                                <div class="card-header">
+                                    <span class="command-badge">cd</span>
+                                    <h4>Se déplacer (Change Directory)</h4>
+                                </div>
+                                <div class="card-content">
+                                    <p><strong>Ce que ça fait :</strong> Vous permet de "marcher" d'un dossier à un autre.</p>
+                                    <p><strong>Analogie :</strong> C'est comme se déplacer d'une pièce à l'autre dans une maison.</p>
+                                    <p><strong>Exemples pratiques :</strong></p>
+                                    <ul>
+                                        <li><code>cd Desktop</code> : Aller dans le dossier Bureau</li>
+                                        <li><code>cd ..</code> : Remonter d'un niveau (comme sortir d'une pièce)</li>
+                                        <li><code>cd ~</code> : Retourner à votre dossier personnel (comme rentrer chez vous)</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="explanation-card">
+                                <div class="card-header">
+                                    <span class="command-badge">mkdir</span>
+                                    <h4>Créer un dossier (Make Directory)</h4>
+                                </div>
+                                <div class="card-content">
+                                    <p><strong>Ce que ça fait :</strong> Crée un nouveau dossier vide.</p>
+                                    <p><strong>Analogie :</strong> C'est comme construire une nouvelle pièce dans votre maison.</p>
+                                    <p><strong>Exemple :</strong> <code>mkdir mon_projet</code> crée un dossier appelé "mon_projet"</p>
+                                    <p><strong>Bonne pratique :</strong> Évitez les espaces dans les noms, utilisez des tirets ou underscores.</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% elif lesson.course.name == "HTML5" %}
+                    {% if lesson.order == 1 %}
+                        <div class="explanation-cards">
+                            <div class="explanation-card">
+                                <div class="card-header">
+                                    <span class="tag-badge">&lt;html&gt;</span>
+                                    <h4>La balise racine</h4>
+                                </div>
+                                <div class="card-content">
+                                    <p><strong>Ce que c'est :</strong> C'est la balise qui dit "Ici commence ma page web"</p>
+                                    <p><strong>Analogie :</strong> C'est comme poser les fondations d'une maison. Tout le reste va à l'intérieur.</p>
+                                    <p><strong>Important :</strong> Elle doit toujours avoir son ouverture <code>&lt;html&gt;</code> et sa fermeture <code>&lt;/html&gt;</code></p>
+                                </div>
+                            </div>
+
+                            <div class="explanation-card">
+                                <div class="card-header">
+                                    <span class="tag-badge">&lt;head&gt;</span>
+                                    <h4>Les informations cachées</h4>
+                                </div>
+                                <div class="card-content">
+                                    <p><strong>Ce que c'est :</strong> Les informations sur votre page que les visiteurs ne voient pas directement</p>
+                                    <p><strong>Analogie :</strong> C'est comme la carte d'identité de votre page web</p>
+                                    <p><strong>Contient :</strong> Le titre qui s'affiche dans l'onglet, les mots-clés pour Google, etc.</p>
+                                </div>
+                            </div>
+
+                            <div class="explanation-card">
+                                <div class="card-header">
+                                    <span class="tag-badge">&lt;body&gt;</span>
+                                    <h4>Le contenu visible</h4>
+                                </div>
+                                <div class="card-content">
+                                    <p><strong>Ce que c'est :</strong> Tout ce que vos visiteurs vont voir et lire</p>
+                                    <p><strong>Analogie :</strong> C'est le salon de votre maison, là où les invités passent du temps</p>
+                                    <p><strong>Contient :</strong> Vos textes, images, vidéos, boutons, tout ce qui est visible !</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-by-step">
+                            <h4><i class="fas fa-list-ol"></i> Créons votre première page ensemble !</h4>
+                            <div class="steps">
+                                <div class="step">
+                                    <div class="step-number">1</div>
+                                    <div class="step-content">
+                                        <h5>Ouvrez votre éditeur de texte</h5>
+                                        <p>Vous pouvez utiliser Notepad (Windows), TextEdit (Mac), ou télécharger VS Code (gratuit et excellent)</p>
+                                    </div>
+                                </div>
+
+                                <div class="step">
+                                    <div class="step-number">2</div>
+                                    <div class="step-content">
+                                        <h5>Copiez ce code de base</h5>
+                                        <div class="copy-code">
+                                            <code>
+&lt;!DOCTYPE html&gt;<br>
+&lt;html&gt;<br>
+&lt;head&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;Ma première page&lt;/title&gt;<br>
+&lt;/head&gt;<br>
+&lt;body&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;h1&gt;Bonjour, je suis [votre nom] !&lt;/h1&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;Ceci est ma première page web. Je suis fier(e) de moi !&lt;/p&gt;<br>
+&lt;/body&gt;<br>
+&lt;/html&gt;
+                                            </code>
+                                        </div>
+                                        <p><strong>Personnalisez :</strong> Remplacez [votre nom] par votre vrai nom</p>
+                                    </div>
+                                </div>
+
+                                <div class="step">
+                                    <div class="step-number">3</div>
+                                    <div class="step-content">
+                                        <h5>Sauvegardez votre fichier</h5>
+                                        <p>Sauvegardez avec le nom <code>ma-premiere-page.html</code></p>
+                                        <p><strong>Important :</strong> L'extension <code>.html</code> est obligatoire !</p>
+                                    </div>
+                                </div>
+
+                                <div class="step">
+                                    <div class="step-number">4</div>
+                                    <div class="step-content">
+                                        <h5>Ouvrez votre page dans un navigateur</h5>
+                                        <p>Double-cliquez sur votre fichier, il s'ouvrira dans votre navigateur</p>
+                                        <p><strong>Félicitations !</strong> Vous venez de créer votre première page web ! 🎉</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
 
             <!-- Section Points clés et bonnes pratiques -->
             <div class="key-concepts-section">
