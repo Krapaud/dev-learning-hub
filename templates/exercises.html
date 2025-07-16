@@ -1,0 +1,584 @@
+{% extends "base.html" %}
+
+{% block title %}Exercices Pratiques - {{ course.name }} - Dev Learning Hub{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Header -->
+    <div class="exercises-header mb-4">
+        <div class="d-flex align-items-center justify-content-between">
+            <h1 class="glitch-title" data-text="Exercices {{ course.name }}">
+                Exercices {{ course.name }}
+            </h1>
+            <div class="level-indicator">
+                <span class="badge bg-primary">Niveau: <span id="current-level">Débutant</span></span>
+            </div>
+        </div>
+        <p class="text-muted">Mettez en pratique vos connaissances avec des exercices interactifs</p>
+    </div>
+
+    <!-- Exercise Types Navigation -->
+    <div class="exercise-types mb-4">
+        <div class="nav nav-pills justify-content-center" role="tablist">
+            <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#coding-exercises" type="button">
+                <i class="fas fa-code me-2"></i>Exercices de Code
+            </button>
+            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#interactive-challenges" type="button">
+                <i class="fas fa-puzzle-piece me-2"></i>Défis Interactifs
+            </button>
+            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#projects" type="button">
+                <i class="fas fa-project-diagram me-2"></i>Projets
+            </button>
+        </div>
+    </div>
+
+    <!-- Exercise Content -->
+    <div class="tab-content">
+        <!-- Coding Exercises -->
+        <div class="tab-pane fade show active" id="coding-exercises">
+            <div class="coding-exercise-container">
+                <div class="row">
+                    <!-- Exercise Description -->
+                    <div class="col-lg-6">
+                        <div class="card bg-dark border-primary h-100">
+                            <div class="card-header bg-primary">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-tasks me-2"></i>
+                                    Instructions
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="exercise-description">
+                                    <h6 id="exercise-title">Chargement de l'exercice...</h6>
+                                    <p id="exercise-content">Veuillez patienter...</p>
+                                    
+                                    <div class="exercise-details mt-3">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <small class="text-muted">Difficulté:</small>
+                                                <span class="badge bg-info ms-2" id="exercise-difficulty">-</span>
+                                            </div>
+                                            <div class="col-6">
+                                                <small class="text-muted">Points:</small>
+                                                <span class="badge bg-warning ms-2" id="exercise-points">-</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="expected-output mt-3">
+                                        <h6 class="text-success">Résultat attendu:</h6>
+                                        <pre class="bg-secondary p-2 rounded"><code id="expected-output">...</code></pre>
+                                    </div>
+                                    
+                                    <div class="hints-section mt-3">
+                                        <button class="btn btn-outline-warning btn-sm" onclick="showHint()">
+                                            <i class="fas fa-lightbulb me-2"></i>Voir un indice
+                                        </button>
+                                        <div id="hint-content" class="alert alert-warning mt-2 d-none">
+                                            <small id="hint-text"></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Code Editor -->
+                    <div class="col-lg-6">
+                        <div class="card bg-dark border-success h-100">
+                            <div class="card-header bg-success d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-code me-2"></i>
+                                    Éditeur de Code
+                                </h5>
+                                <div class="editor-actions">
+                                    <button class="btn btn-sm btn-outline-light me-2" onclick="resetCode()">
+                                        <i class="fas fa-undo"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-primary" onclick="runCode()">
+                                        <i class="fas fa-play me-2"></i>Exécuter
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="code-editor-wrapper">
+                                    <textarea id="code-editor" class="form-control border-0" rows="15" 
+                                              style="font-family: 'Courier New', monospace; background: #1e1e1e; color: #d4d4d4; resize: none;">
+// Votre code ici...
+                                    </textarea>
+                                </div>
+                                
+                                <!-- Output Panel -->
+                                <div class="output-panel border-top">
+                                    <div class="output-header bg-dark p-2">
+                                        <small class="text-muted">
+                                            <i class="fas fa-terminal me-2"></i>Résultat
+                                        </small>
+                                        <button class="btn btn-sm btn-outline-secondary float-end" onclick="clearOutput()">
+                                            Effacer
+                                        </button>
+                                    </div>
+                                    <pre id="code-output" class="p-3 m-0 bg-black text-light" style="min-height: 100px; max-height: 200px; overflow-y: auto;">Cliquez sur "Exécuter" pour voir le résultat...</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Exercise Navigation -->
+                <div class="exercise-navigation mt-4 text-center">
+                    <button class="btn btn-outline-secondary me-2" id="prev-exercise" onclick="previousExercise()">
+                        <i class="fas fa-arrow-left me-2"></i>Précédent
+                    </button>
+                    <span class="exercise-counter mx-3">
+                        Exercice <span id="current-exercise">1</span> sur <span id="total-exercises">5</span>
+                    </span>
+                    <button class="btn btn-outline-primary me-2" id="next-exercise" onclick="nextExercise()">
+                        Suivant<i class="fas fa-arrow-right ms-2"></i>
+                    </button>
+                    <button class="btn btn-success" onclick="validateSolution()">
+                        <i class="fas fa-check me-2"></i>Valider
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Challenges -->
+        <div class="tab-pane fade" id="interactive-challenges">
+            <div class="challenges-grid">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="challenge-card card bg-dark border-warning h-100">
+                            <div class="card-body text-center">
+                                <div class="challenge-icon mb-3">
+                                    <i class="fas fa-stopwatch fa-3x text-warning"></i>
+                                </div>
+                                <h5 class="card-title">Défi Rapidité</h5>
+                                <p class="card-text">Résolvez des problèmes en un temps limité</p>
+                                <button class="btn btn-warning" onclick="startSpeedChallenge()">
+                                    <i class="fas fa-bolt me-2"></i>Commencer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-4">
+                        <div class="challenge-card card bg-dark border-info h-100">
+                            <div class="card-body text-center">
+                                <div class="challenge-icon mb-3">
+                                    <i class="fas fa-puzzle-piece fa-3x text-info"></i>
+                                </div>
+                                <h5 class="card-title">Débogage</h5>
+                                <p class="card-text">Trouvez et corrigez les erreurs dans le code</p>
+                                <button class="btn btn-info" onclick="startDebuggingChallenge()">
+                                    <i class="fas fa-bug me-2"></i>Déboguer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-4">
+                        <div class="challenge-card card bg-dark border-success h-100">
+                            <div class="card-body text-center">
+                                <div class="challenge-icon mb-3">
+                                    <i class="fas fa-code-branch fa-3x text-success"></i>
+                                </div>
+                                <h5 class="card-title">Optimisation</h5>
+                                <p class="card-text">Améliorez les performances du code</p>
+                                <button class="btn btn-success" onclick="startOptimizationChallenge()">
+                                    <i class="fas fa-tachometer-alt me-2"></i>Optimiser
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects -->
+        <div class="tab-pane fade" id="projects">
+            <div class="projects-container">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="card bg-dark border-primary">
+                            <div class="card-header bg-primary">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-project-diagram me-2"></i>
+                                    Projet Guidé
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="project-content">
+                                    <h6 id="project-title">Projet: Application Todo</h6>
+                                    <p id="project-description">
+                                        Créez une application de gestion de tâches complète avec les fonctionnalités suivantes:
+                                    </p>
+                                    <ul id="project-requirements">
+                                        <li>Ajouter des tâches</li>
+                                        <li>Marquer comme terminé</li>
+                                        <li>Supprimer des tâches</li>
+                                        <li>Filtrer par statut</li>
+                                    </ul>
+                                    
+                                    <div class="project-progress mt-4">
+                                        <h6>Progression:</h6>
+                                        <div class="progress mb-2">
+                                            <div class="progress-bar bg-primary" role="progressbar" style="width: 0%" id="project-progress-bar"></div>
+                                        </div>
+                                        <small class="text-muted">Étape <span id="current-step">1</span> sur <span id="total-steps">5</span></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="card bg-dark border-info">
+                            <div class="card-header bg-info">
+                                <h6 class="mb-0">
+                                    <i class="fas fa-list-check me-2"></i>
+                                    Étapes du Projet
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="project-steps" id="project-steps">
+                                    <div class="step completed">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        Créer la structure HTML
+                                    </div>
+                                    <div class="step current">
+                                        <i class="fas fa-circle text-primary me-2"></i>
+                                        Ajouter les styles CSS
+                                    </div>
+                                    <div class="step">
+                                        <i class="far fa-circle text-muted me-2"></i>
+                                        Implémenter JavaScript
+                                    </div>
+                                    <div class="step">
+                                        <i class="far fa-circle text-muted me-2"></i>
+                                        Tester les fonctionnalités
+                                    </div>
+                                    <div class="step">
+                                        <i class="far fa-circle text-muted me-2"></i>
+                                        Finaliser le projet
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <button class="btn btn-primary btn-sm w-100" onclick="nextProjectStep()">
+                                        Étape Suivante
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.exercises-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.glitch-title {
+    position: relative;
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+}
+
+.exercise-types .nav-pills .nav-link {
+    background: transparent;
+    border: 2px solid #495057;
+    color: #fff;
+    margin: 0 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.exercise-types .nav-pills .nav-link.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #000;
+}
+
+.code-editor-wrapper {
+    position: relative;
+}
+
+#code-editor {
+    background: #1e1e1e !important;
+    color: #d4d4d4 !important;
+    border: none !important;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+#code-editor:focus {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.output-panel {
+    background: #0a0a0a;
+}
+
+.challenge-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.challenge-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 255, 159, 0.3);
+}
+
+.challenge-icon {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.step {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #495057;
+    transition: all 0.3s ease;
+}
+
+.step:last-child {
+    border-bottom: none;
+}
+
+.step.completed {
+    color: #28a745;
+}
+
+.step.current {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.project-progress .progress {
+    height: 8px;
+}
+
+.exercise-navigation {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    padding: 1rem;
+    border: 1px solid #495057;
+}
+
+.nav-pills {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 25px;
+    padding: 0.5rem;
+}
+</style>
+
+<script>
+// Exercise System
+class ExerciseSystem {
+    constructor(courseId) {
+        this.courseId = courseId;
+        this.exercises = [];
+        this.currentExerciseIndex = 0;
+        this.currentHintIndex = 0;
+        
+        this.loadExercises();
+    }
+    
+    async loadExercises() {
+        try {
+            const response = await fetch(`/api/exercises/${this.courseId}`);
+            const data = await response.json();
+            this.exercises = data.exercises;
+        } catch (error) {
+            console.error('Erreur lors du chargement des exercices:', error);
+            this.loadDefaultExercises();
+        }
+        
+        this.displayCurrentExercise();
+        this.updateNavigation();
+    }
+    
+    loadDefaultExercises() {
+        // Exercices par défaut basés sur le cours
+        this.exercises = [
+            {
+                id: 1,
+                title: "Variables et Types",
+                description: "Créez des variables pour stocker différents types de données.",
+                difficulty: "Facile",
+                points: 10,
+                starterCode: "// Créez des variables pour:\n// - Un nom (string)\n// - Un âge (number)\n// - Un statut actif (boolean)\n\n",
+                expectedOutput: "Nom: Alice\nÂge: 25\nActif: true",
+                hints: [
+                    "Utilisez les mots-clés let ou const pour déclarer des variables",
+                    "Les strings sont entourées de guillemets",
+                    "Les booleans sont true ou false"
+                ],
+                solution: "const nom = 'Alice';\nconst age = 25;\nconst actif = true;\n\nconsole.log('Nom:', nom);\nconsole.log('Âge:', age);\nconsole.log('Actif:', actif);"
+            },
+            {
+                id: 2,
+                title: "Fonctions",
+                description: "Créez une fonction qui calcule l'aire d'un rectangle.",
+                difficulty: "Moyen",
+                points: 20,
+                starterCode: "// Créez une fonction calculerAire qui prend largeur et hauteur en paramètres\n\n",
+                expectedOutput: "Aire: 50",
+                hints: [
+                    "Utilisez le mot-clé function ou une arrow function",
+                    "N'oubliez pas le return",
+                    "L'aire = largeur × hauteur"
+                ],
+                solution: "function calculerAire(largeur, hauteur) {\n    return largeur * hauteur;\n}\n\nconst aire = calculerAire(10, 5);\nconsole.log('Aire:', aire);"
+            }
+        ];
+        
+        document.getElementById('total-exercises').textContent = this.exercises.length;
+    }
+    
+    displayCurrentExercise() {
+        const exercise = this.exercises[this.currentExerciseIndex];
+        
+        document.getElementById('exercise-title').textContent = exercise.title;
+        document.getElementById('exercise-content').textContent = exercise.description;
+        document.getElementById('exercise-difficulty').textContent = exercise.difficulty;
+        document.getElementById('exercise-points').textContent = exercise.points + ' pts';
+        document.getElementById('expected-output').textContent = exercise.expectedOutput;
+        document.getElementById('code-editor').value = exercise.starterCode;
+        
+        // Reset hint
+        this.currentHintIndex = 0;
+        document.getElementById('hint-content').classList.add('d-none');
+        
+        // Update counter
+        document.getElementById('current-exercise').textContent = this.currentExerciseIndex + 1;
+    }
+    
+    updateNavigation() {
+        document.getElementById('prev-exercise').disabled = this.currentExerciseIndex === 0;
+        document.getElementById('next-exercise').disabled = this.currentExerciseIndex === this.exercises.length - 1;
+    }
+}
+
+// Global functions
+function showHint() {
+    const exercise = window.exerciseSystem.exercises[window.exerciseSystem.currentExerciseIndex];
+    const hintIndex = window.exerciseSystem.currentHintIndex;
+    
+    if (hintIndex < exercise.hints.length) {
+        document.getElementById('hint-text').textContent = exercise.hints[hintIndex];
+        document.getElementById('hint-content').classList.remove('d-none');
+        window.exerciseSystem.currentHintIndex++;
+    } else {
+        document.getElementById('hint-text').textContent = "Plus d'indices disponibles.";
+        document.getElementById('hint-content').classList.remove('d-none');
+    }
+}
+
+function runCode() {
+    const code = document.getElementById('code-editor').value;
+    const output = document.getElementById('code-output');
+    
+    // Simuler l'exécution du code
+    try {
+        // Capturer console.log
+        let logs = [];
+        const originalLog = console.log;
+        console.log = (...args) => {
+            logs.push(args.join(' '));
+            originalLog(...args);
+        };
+        
+        // Évaluer le code (attention: dangereux en production)
+        eval(code);
+        
+        // Restaurer console.log
+        console.log = originalLog;
+        
+        output.textContent = logs.join('\n') || 'Code exécuté sans sortie';
+        output.className = 'p-3 m-0 bg-black text-light';
+    } catch (error) {
+        output.textContent = `Erreur: ${error.message}`;
+        output.className = 'p-3 m-0 bg-danger text-white';
+    }
+}
+
+function resetCode() {
+    const exercise = window.exerciseSystem.exercises[window.exerciseSystem.currentExerciseIndex];
+    document.getElementById('code-editor').value = exercise.starterCode;
+    clearOutput();
+}
+
+function clearOutput() {
+    document.getElementById('code-output').textContent = 'Cliquez sur "Exécuter" pour voir le résultat...';
+    document.getElementById('code-output').className = 'p-3 m-0 bg-black text-light';
+}
+
+function previousExercise() {
+    if (window.exerciseSystem.currentExerciseIndex > 0) {
+        window.exerciseSystem.currentExerciseIndex--;
+        window.exerciseSystem.displayCurrentExercise();
+        window.exerciseSystem.updateNavigation();
+    }
+}
+
+function nextExercise() {
+    if (window.exerciseSystem.currentExerciseIndex < window.exerciseSystem.exercises.length - 1) {
+        window.exerciseSystem.currentExerciseIndex++;
+        window.exerciseSystem.displayCurrentExercise();
+        window.exerciseSystem.updateNavigation();
+    }
+}
+
+function validateSolution() {
+    const code = document.getElementById('code-editor').value;
+    const exercise = window.exerciseSystem.exercises[window.exerciseSystem.currentExerciseIndex];
+    
+    // Vérification simple (à améliorer)
+    const isValid = code.trim().length > exercise.starterCode.trim().length;
+    
+    if (isValid) {
+        alert('✅ Excellent travail! Solution validée.');
+        // Ici on pourrait sauvegarder le progrès
+    } else {
+        alert('❌ La solution semble incomplète. Continuez à essayer!');
+    }
+}
+
+function startSpeedChallenge() {
+    alert('🚀 Défi rapidité à venir! Fonctionnalité en développement.');
+}
+
+function startDebuggingChallenge() {
+    alert('🐛 Défi débogage à venir! Fonctionnalité en développement.');
+}
+
+function startOptimizationChallenge() {
+    alert('⚡ Défi optimisation à venir! Fonctionnalité en développement.');
+}
+
+function nextProjectStep() {
+    alert('📋 Étape suivante du projet à venir! Fonctionnalité en développement.');
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    const courseId = {{ course.id }};
+    window.exerciseSystem = new ExerciseSystem(courseId);
+});
+</script>
+{% endblock %}

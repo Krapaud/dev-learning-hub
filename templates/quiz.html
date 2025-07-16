@@ -1,0 +1,569 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz - {{ course.name }} - Dev Learning Hub{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Quiz Header -->
+    <div class="quiz-header mb-4">
+        <div class="d-flex align-items-center justify-content-between">
+            <h1 class="glitch-title" data-text="Quiz {{ course.name }}">
+                Quiz {{ course.name }}
+            </h1>
+            <div class="quiz-progress">
+                <div class="progress" style="height: 10px; width: 200px;">
+                    <div class="progress-bar bg-primary" role="progressbar" style="width: 0%" id="quiz-progress"></div>
+                </div>
+                <small class="text-muted mt-1 d-block">Question <span id="current-question">1</span> sur <span id="total-questions">5</span></small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Container -->
+    <div class="quiz-container">
+        <div class="card bg-dark border-primary shadow-lg">
+            <div class="card-body p-4">
+                <!-- Question -->
+                <div class="question-section mb-4">
+                    <h3 class="text-primary mb-3" id="question-text">Chargement de la question...</h3>
+                    <div class="question-info">
+                        <span class="badge bg-secondary me-2" id="question-type">Type</span>
+                        <span class="badge bg-info" id="question-difficulty">Difficulté</span>
+                    </div>
+                </div>
+
+                <!-- Answers -->
+                <div class="answers-section mb-4" id="answers-container">
+                    <!-- Les réponses seront injectées ici via JavaScript -->
+                </div>
+
+                <!-- Code Example (si applicable) -->
+                <div class="code-example mb-4 d-none" id="code-example">
+                    <h5 class="text-success mb-2">Code d'exemple :</h5>
+                    <pre class="bg-secondary p-3 rounded"><code id="code-content"></code></pre>
+                </div>
+
+                <!-- Navigation -->
+                <div class="quiz-navigation d-flex justify-content-between">
+                    <button class="btn btn-outline-secondary" id="prev-btn" disabled>
+                        <i class="fas fa-arrow-left me-2"></i>Précédent
+                    </button>
+                    
+                    <div class="quiz-actions">
+                        <button class="btn btn-warning me-2" id="hint-btn">
+                            <i class="fas fa-lightbulb me-2"></i>Indice
+                        </button>
+                        <button class="btn btn-primary" id="next-btn">
+                            Suivant<i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                        <button class="btn btn-success d-none" id="finish-btn">
+                            <i class="fas fa-check me-2"></i>Terminer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section (masqué initialement) -->
+        <div class="quiz-results d-none mt-4" id="quiz-results">
+            <div class="card bg-dark border-success shadow-lg">
+                <div class="card-body text-center p-4">
+                    <h2 class="text-success mb-3">
+                        <i class="fas fa-trophy me-2"></i>Quiz Terminé !
+                    </h2>
+                    <div class="results-stats mb-4">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="stat-card bg-primary rounded p-3">
+                                    <h3 id="score-percentage">0%</h3>
+                                    <small>Score</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-card bg-success rounded p-3">
+                                    <h3 id="correct-answers">0</h3>
+                                    <small>Bonnes réponses</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-card bg-danger rounded p-3">
+                                    <h3 id="wrong-answers">0</h3>
+                                    <small>Mauvaises réponses</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-card bg-info rounded p-3">
+                                    <h3 id="time-taken">0s</h3>
+                                    <small>Temps</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="trophy-earned mb-4" id="trophy-section" style="display: none;">
+                        <div class="trophy-animation">
+                            <i class="fas fa-trophy text-warning fa-3x mb-2"></i>
+                            <h4 class="text-warning">Nouveau Trophée Débloqué!</h4>
+                            <p id="trophy-name" class="text-muted"></p>
+                        </div>
+                    </div>
+
+                    <div class="quiz-actions">
+                        <button class="btn btn-primary me-2" onclick="retakeQuiz()">
+                            <i class="fas fa-redo me-2"></i>Recommencer
+                        </button>
+                        <a href="{{ url_for('course_detail', course_id=course.id) }}" class="btn btn-outline-light">
+                            <i class="fas fa-arrow-left me-2"></i>Retour au cours
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hint Modal -->
+    <div class="modal fade" id="hintModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark border-warning">
+                <div class="modal-header border-warning">
+                    <h5 class="modal-title text-warning">
+                        <i class="fas fa-lightbulb me-2"></i>Indice
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="hint-content">Chargement de l'indice...</p>
+                </div>
+                <div class="modal-footer border-warning">
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.quiz-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.answer-option {
+    border: 2px solid #495057;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #343a40;
+}
+
+.answer-option:hover {
+    border-color: var(--primary-color);
+    background: rgba(0, 255, 159, 0.1);
+    transform: translateX(5px);
+}
+
+.answer-option.selected {
+    border-color: var(--primary-color);
+    background: rgba(0, 255, 159, 0.2);
+}
+
+.answer-option.correct {
+    border-color: #28a745;
+    background: rgba(40, 167, 69, 0.2);
+}
+
+.answer-option.incorrect {
+    border-color: #dc3545;
+    background: rgba(220, 53, 69, 0.2);
+}
+
+.stat-card {
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: scale(1.05);
+}
+
+.trophy-animation {
+    animation: bounceIn 1s ease-in-out;
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.question-section {
+    min-height: 120px;
+}
+
+.glitch-title {
+    position: relative;
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.glitch-title::before,
+.glitch-title::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.glitch-title::before {
+    animation: glitch-1 0.8s infinite;
+    color: #ff00ff;
+    z-index: -1;
+}
+
+.glitch-title::after {
+    animation: glitch-2 0.8s infinite;
+    color: #00ffff;
+    z-index: -2;
+}
+
+@keyframes glitch-1 {
+    0%, 14%, 15%, 49%, 50%, 99%, 100% { transform: translate3d(0, 0, 0); }
+    1%, 2% { transform: translate3d(-1px, 0, 0); }
+    3%, 4% { transform: translate3d(1px, 0, 0); }
+}
+
+@keyframes glitch-2 {
+    0%, 20%, 21%, 62%, 63%, 99%, 100% { transform: translate3d(0, 0, 0); }
+    21%, 22% { transform: translate3d(-1px, 0, 0); }
+    62%, 63% { transform: translate3d(1px, 0, 0); }
+}
+</style>
+
+<script>
+// Quiz Logic
+class Quiz {
+    constructor(courseId) {
+        this.courseId = courseId;
+        this.questions = [];
+        this.currentQuestionIndex = 0;
+        this.userAnswers = [];
+        this.score = 0;
+        this.startTime = Date.now();
+        this.hintsUsed = 0;
+        
+        this.initializeQuiz();
+        this.bindEvents();
+    }
+    
+    async initializeQuiz() {
+        await this.loadQuestions();
+        this.displayQuestion();
+        this.updateProgress();
+    }
+    
+    async loadQuestions() {
+        try {
+            const response = await fetch(`/api/quiz/${this.courseId}`);
+            const data = await response.json();
+            this.questions = data.questions;
+            document.getElementById('total-questions').textContent = this.questions.length;
+        } catch (error) {
+            console.error('Erreur lors du chargement des questions:', error);
+            // Questions de fallback
+            this.loadFallbackQuestions();
+        }
+    }
+    
+    loadFallbackQuestions() {
+        // Questions génériques basées sur le cours
+        this.questions = [
+            {
+                id: 1,
+                text: "Quelle est la principale caractéristique de ce langage/framework ?",
+                type: "multiple_choice",
+                difficulty: "facile",
+                options: [
+                    "Performance élevée",
+                    "Facilité d'apprentissage", 
+                    "Écosystème riche",
+                    "Polyvalence"
+                ],
+                correct_answer: 0,
+                hint: "Pensez à l'avantage principal mentionné dans les leçons."
+            },
+            {
+                id: 2,
+                text: "Dans quel contexte ce langage/framework est-il principalement utilisé ?",
+                type: "multiple_choice",
+                difficulty: "facile",
+                options: [
+                    "Développement web",
+                    "Intelligence artificielle",
+                    "Développement mobile",
+                    "Analyse de données"
+                ],
+                correct_answer: 0,
+                hint: "Regardez les exemples d'applications données dans le cours."
+            }
+        ];
+        document.getElementById('total-questions').textContent = this.questions.length;
+    }
+    
+    displayQuestion() {
+        const question = this.questions[this.currentQuestionIndex];
+        
+        // Mettre à jour le texte de la question
+        document.getElementById('question-text').textContent = question.text;
+        document.getElementById('question-type').textContent = this.formatType(question.type);
+        document.getElementById('question-difficulty').textContent = this.formatDifficulty(question.difficulty);
+        
+        // Afficher le code si présent
+        if (question.code) {
+            document.getElementById('code-example').classList.remove('d-none');
+            document.getElementById('code-content').textContent = question.code;
+        } else {
+            document.getElementById('code-example').classList.add('d-none');
+        }
+        
+        // Générer les options de réponse
+        this.displayAnswerOptions(question);
+        
+        // Mettre à jour les boutons
+        this.updateNavigationButtons();
+    }
+    
+    displayAnswerOptions(question) {
+        const container = document.getElementById('answers-container');
+        container.innerHTML = '';
+        
+        question.options.forEach((option, index) => {
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'answer-option';
+            optionDiv.setAttribute('data-index', index);
+            optionDiv.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <span class="option-letter me-3 fw-bold">${String.fromCharCode(65 + index)}.</span>
+                    <span class="option-text">${option}</span>
+                </div>
+            `;
+            
+            optionDiv.addEventListener('click', () => this.selectAnswer(index));
+            container.appendChild(optionDiv);
+        });
+    }
+    
+    selectAnswer(selectedIndex) {
+        // Retirer la sélection précédente
+        document.querySelectorAll('.answer-option').forEach(opt => {
+            opt.classList.remove('selected');
+        });
+        
+        // Ajouter la nouvelle sélection
+        document.querySelector(`[data-index="${selectedIndex}"]`).classList.add('selected');
+        
+        // Sauvegarder la réponse
+        this.userAnswers[this.currentQuestionIndex] = selectedIndex;
+        
+        // Activer le bouton suivant
+        document.getElementById('next-btn').disabled = false;
+    }
+    
+    nextQuestion() {
+        if (this.currentQuestionIndex < this.questions.length - 1) {
+            this.currentQuestionIndex++;
+            this.displayQuestion();
+            this.updateProgress();
+        } else {
+            this.finishQuiz();
+        }
+    }
+    
+    previousQuestion() {
+        if (this.currentQuestionIndex > 0) {
+            this.currentQuestionIndex--;
+            this.displayQuestion();
+            this.updateProgress();
+        }
+    }
+    
+    updateProgress() {
+        const progress = ((this.currentQuestionIndex + 1) / this.questions.length) * 100;
+        document.getElementById('quiz-progress').style.width = `${progress}%`;
+        document.getElementById('current-question').textContent = this.currentQuestionIndex + 1;
+    }
+    
+    updateNavigationButtons() {
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const finishBtn = document.getElementById('finish-btn');
+        
+        prevBtn.disabled = this.currentQuestionIndex === 0;
+        
+        const isLastQuestion = this.currentQuestionIndex === this.questions.length - 1;
+        if (isLastQuestion) {
+            nextBtn.classList.add('d-none');
+            finishBtn.classList.remove('d-none');
+        } else {
+            nextBtn.classList.remove('d-none');
+            finishBtn.classList.add('d-none');
+        }
+        
+        // Vérifier si une réponse est sélectionnée
+        const hasAnswer = this.userAnswers[this.currentQuestionIndex] !== undefined;
+        nextBtn.disabled = !hasAnswer;
+        finishBtn.disabled = !hasAnswer;
+    }
+    
+    async showHint() {
+        const question = this.questions[this.currentQuestionIndex];
+        const hintContent = document.getElementById('hint-content');
+        
+        if (question.hint) {
+            hintContent.textContent = question.hint;
+        } else {
+            hintContent.textContent = "Aucun indice disponible pour cette question.";
+        }
+        
+        this.hintsUsed++;
+        
+        const hintModal = new bootstrap.Modal(document.getElementById('hintModal'));
+        hintModal.show();
+    }
+    
+    calculateScore() {
+        let correct = 0;
+        this.questions.forEach((question, index) => {
+            if (this.userAnswers[index] === question.correct_answer) {
+                correct++;
+            }
+        });
+        
+        this.score = Math.round((correct / this.questions.length) * 100);
+        return {
+            score: this.score,
+            correct: correct,
+            wrong: this.questions.length - correct,
+            total: this.questions.length
+        };
+    }
+    
+    async finishQuiz() {
+        const results = this.calculateScore();
+        const timeElapsed = Math.round((Date.now() - this.startTime) / 1000);
+        
+        // Afficher les bonnes/mauvaises réponses
+        this.showAnswerFeedback();
+        
+        // Masquer le quiz, afficher les résultats
+        setTimeout(() => {
+            document.querySelector('.quiz-container .card').style.display = 'none';
+            document.getElementById('quiz-results').classList.remove('d-none');
+            
+            // Remplir les statistiques
+            document.getElementById('score-percentage').textContent = `${results.score}%`;
+            document.getElementById('correct-answers').textContent = results.correct;
+            document.getElementById('wrong-answers').textContent = results.wrong;
+            document.getElementById('time-taken').textContent = `${timeElapsed}s`;
+            
+            // Vérifier les trophées
+            this.checkTrophies(results);
+            
+            // Sauvegarder les résultats
+            this.saveQuizResults(results, timeElapsed);
+        }, 3000);
+    }
+    
+    showAnswerFeedback() {
+        document.querySelectorAll('.answer-option').forEach((opt, index) => {
+            const question = this.questions[this.currentQuestionIndex];
+            const optIndex = parseInt(opt.getAttribute('data-index'));
+            
+            if (optIndex === question.correct_answer) {
+                opt.classList.add('correct');
+            } else if (optIndex === this.userAnswers[this.currentQuestionIndex]) {
+                opt.classList.add('incorrect');
+            }
+        });
+    }
+    
+    async checkTrophies(results) {
+        const trophyConditions = [
+            { condition: results.score === 100, name: "Quiz Parfait", description: "Répondre correctement à toutes les questions" },
+            { condition: results.score >= 80, name: "Expert", description: "Obtenir plus de 80% au quiz" },
+            { condition: this.hintsUsed === 0, name: "Indépendant", description: "Terminer un quiz sans utiliser d'indices" }
+        ];
+        
+        for (const trophy of trophyConditions) {
+            if (trophy.condition) {
+                document.getElementById('trophy-section').style.display = 'block';
+                document.getElementById('trophy-name').textContent = trophy.name;
+                break;
+            }
+        }
+    }
+    
+    async saveQuizResults(results, timeElapsed) {
+        try {
+            await fetch('/api/quiz/results', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    course_id: this.courseId,
+                    score: results.score,
+                    correct_answers: results.correct,
+                    total_questions: results.total,
+                    time_elapsed: timeElapsed,
+                    hints_used: this.hintsUsed
+                })
+            });
+        } catch (error) {
+            console.error('Erreur lors de la sauvegarde:', error);
+        }
+    }
+    
+    formatType(type) {
+        const types = {
+            'multiple_choice': 'Choix multiple',
+            'true_false': 'Vrai/Faux',
+            'code': 'Code'
+        };
+        return types[type] || type;
+    }
+    
+    formatDifficulty(difficulty) {
+        const difficulties = {
+            'facile': 'Facile',
+            'moyen': 'Moyen',
+            'difficile': 'Difficile'
+        };
+        return difficulties[difficulty] || difficulty;
+    }
+    
+    bindEvents() {
+        document.getElementById('next-btn').addEventListener('click', () => this.nextQuestion());
+        document.getElementById('prev-btn').addEventListener('click', () => this.previousQuestion());
+        document.getElementById('finish-btn').addEventListener('click', () => this.finishQuiz());
+        document.getElementById('hint-btn').addEventListener('click', () => this.showHint());
+    }
+}
+
+// Fonctions globales
+function retakeQuiz() {
+    location.reload();
+}
+
+// Initialiser le quiz quand la page est chargée
+document.addEventListener('DOMContentLoaded', () => {
+    const courseId = {{ course.id }};
+    window.quiz = new Quiz(courseId);
+});
+</script>
+{% endblock %}

@@ -639,6 +639,256 @@ def init_database():
             
             db.session.commit()
 
+# Nouvelles routes pour les fonctionnalités avancées
+
+@app.route('/course/<int:course_id>/quiz')
+@login_required
+def course_quiz(course_id):
+    """Page de quiz pour un cours"""
+    course = Course.query.get_or_404(course_id)
+    return render_template('quiz.html', course=course)
+
+@app.route('/course/<int:course_id>/exercises')
+@login_required
+def course_exercises(course_id):
+    """Page d'exercices pour un cours"""
+    course = Course.query.get_or_404(course_id)
+    return render_template('exercises.html', course=course)
+
+@app.route('/api/quiz/<int:course_id>')
+@login_required
+def api_quiz_questions(course_id):
+    """API pour récupérer les questions de quiz"""
+    course = Course.query.get_or_404(course_id)
+    
+    # Questions générées dynamiquement basées sur le cours
+    questions = generate_quiz_questions(course)
+    
+    return jsonify({
+        'success': True,
+        'questions': questions
+    })
+
+@app.route('/api/exercises/<int:course_id>')
+@login_required
+def api_exercises(course_id):
+    """API pour récupérer les exercices"""
+    course = Course.query.get_or_404(course_id)
+    
+    # Exercices générés dynamiquement basés sur le cours
+    exercises = generate_exercises(course)
+    
+    return jsonify({
+        'success': True,
+        'exercises': exercises
+    })
+
+@app.route('/api/quiz/results', methods=['POST'])
+@login_required
+def api_quiz_results():
+    """Sauvegarder les résultats de quiz"""
+    data = request.get_json()
+    
+    # Ici vous pourriez sauvegarder en base de données
+    # Pour l'instant, on retourne juste un succès
+    
+    return jsonify({
+        'success': True,
+        'message': 'Résultats sauvegardés'
+    })
+
+@app.route('/certificate/<int:course_id>')
+@login_required
+def course_certificate(course_id):
+    """Afficher le certificat de réussite d'un cours"""
+    course = Course.query.get_or_404(course_id)
+    
+    # Vérifier que l'utilisateur a terminé le cours
+    completed_lessons = CompletedLesson.query.filter_by(user_id=current_user.id).all()
+    completed_lesson_ids = [cl.lesson_id for cl in completed_lessons]
+    course_lesson_ids = [lesson.id for lesson in course.lessons]
+    
+    # Vérifier si toutes les leçons du cours sont terminées
+    all_completed = all(lesson_id in completed_lesson_ids for lesson_id in course_lesson_ids)
+    
+    if not all_completed:
+        flash('Vous devez terminer toutes les leçons du cours pour obtenir votre certificat.', 'warning')
+        return redirect(url_for('course_detail', course_id=course_id))
+    
+    # Calculer les statistiques de réussite
+    completion_stats = {
+        'lessons_completed': len(course_lesson_ids),
+        'quiz_score': 85,  # Score simulé - à implémenter avec de vraies données
+        'total_points': len(course_lesson_ids) * 10
+    }
+    
+    # Date de completion (simulée)
+    from datetime import datetime
+    completion_date = datetime.now()
+    
+    return render_template('certificate.html', 
+                         course=course, 
+                         completion_stats=completion_stats,
+                         completion_date=completion_date)
+
+@app.route('/learning-paths')
+def learning_paths():
+    """Page des parcours d'apprentissage"""
+    return render_template('learning_paths.html')
+
+def generate_quiz_questions(course):
+    """Générer des questions de quiz basées sur le cours"""
+    
+    # Questions personnalisées par technologie
+    questions_by_tech = {
+        'HTML': [
+            {
+                'id': 1,
+                'text': 'Quelle balise HTML est utilisée pour créer un lien hypertexte ?',
+                'type': 'multiple_choice',
+                'difficulty': 'facile',
+                'options': ['<link>', '<a>', '<href>', '<url>'],
+                'correct_answer': 1,
+                'hint': 'Cette balise commence par la première lettre de l\'alphabet.'
+            },
+            {
+                'id': 2,
+                'text': 'Comment définit-on un titre de niveau 1 en HTML ?',
+                'type': 'multiple_choice',
+                'difficulty': 'facile',
+                'options': ['<title>', '<h1>', '<header>', '<heading>'],
+                'correct_answer': 1,
+                'hint': 'H pour Heading, 1 pour le niveau.'
+            }
+        ],
+        'CSS': [
+            {
+                'id': 1,
+                'text': 'Quelle propriété CSS est utilisée pour changer la couleur du texte ?',
+                'type': 'multiple_choice',
+                'difficulty': 'facile',
+                'options': ['text-color', 'font-color', 'color', 'text-style'],
+                'correct_answer': 2,
+                'hint': 'C\'est le mot anglais le plus simple pour couleur.'
+            }
+        ],
+        'JavaScript ES6+': [
+            {
+                'id': 1,
+                'text': 'Quelle est la différence entre let et var ?',
+                'type': 'multiple_choice',
+                'difficulty': 'moyen',
+                'options': [
+                    'Aucune différence',
+                    'let a une portée de bloc, var a une portée de fonction',
+                    'var est plus moderne que let',
+                    'let ne peut pas être redéclaré'
+                ],
+                'correct_answer': 1,
+                'hint': 'Pensez à la portée (scope) des variables.'
+            }
+        ],
+        'React.js': [
+            {
+                'id': 1,
+                'text': 'Qu\'est-ce que JSX ?',
+                'type': 'multiple_choice',
+                'difficulty': 'moyen',
+                'options': [
+                    'Un nouveau langage de programmation',
+                    'Une extension de syntaxe JavaScript',
+                    'Un framework CSS',
+                    'Une base de données'
+                ],
+                'correct_answer': 1,
+                'hint': 'JSX = JavaScript eXtension'
+            }
+        ]
+    }
+    
+    # Retourner les questions correspondant au cours ou des questions génériques
+    course_name = course.name
+    if course_name in questions_by_tech:
+        return questions_by_tech[course_name]
+    else:
+        # Questions génériques
+        return [
+            {
+                'id': 1,
+                'text': f'Quelle est la principale utilisation de {course_name} ?',
+                'type': 'multiple_choice',
+                'difficulty': 'facile',
+                'options': [
+                    'Développement web frontend',
+                    'Développement web backend',
+                    'Développement mobile',
+                    'Analyse de données'
+                ],
+                'correct_answer': 0,
+                'hint': 'Consultez la description du cours pour un indice.'
+            }
+        ]
+
+def generate_exercises(course):
+    """Générer des exercices basés sur le cours"""
+    
+    exercises_by_tech = {
+        'JavaScript ES6+': [
+            {
+                'id': 1,
+                'title': 'Variables ES6',
+                'description': 'Utilisez let et const pour déclarer des variables.',
+                'difficulty': 'Facile',
+                'points': 10,
+                'starterCode': '// Déclarez une variable constante \'PI\' avec la valeur 3.14159\n// Déclarez une variable \'rayon\' avec let et assignez-lui 5\n\n',
+                'expectedOutput': 'PI: 3.14159\nRayon: 5',
+                'hints': [
+                    'Utilisez const pour les valeurs qui ne changent pas',
+                    'Utilisez let pour les variables qui peuvent changer',
+                    'N\'oubliez pas console.log pour afficher les valeurs'
+                ]
+            }
+        ],
+        'React.js': [
+            {
+                'id': 1,
+                'title': 'Premier Composant',
+                'description': 'Créez un composant React qui affiche un message de bienvenue.',
+                'difficulty': 'Facile',
+                'points': 15,
+                'starterCode': '// Créez un composant fonctionnel Welcome qui affiche "Bienvenue sur mon site!"\n\n',
+                'expectedOutput': 'Bienvenue sur mon site!',
+                'hints': [
+                    'Utilisez function ou const avec une arrow function',
+                    'Retournez du JSX',
+                    'N\'oubliez pas les parenthèses pour le JSX multilignes'
+                ]
+            }
+        ]
+    }
+    
+    course_name = course.name
+    if course_name in exercises_by_tech:
+        return exercises_by_tech[course_name]
+    else:
+        # Exercices génériques
+        return [
+            {
+                'id': 1,
+                'title': f'Introduction à {course_name}',
+                'description': f'Créez votre premier exemple avec {course_name}.',
+                'difficulty': 'Facile',
+                'points': 10,
+                'starterCode': f'// Votre code {course_name} ici\n\n',
+                'expectedOutput': 'Hello World!',
+                'hints': [
+                    'Commencez simple',
+                    'Consultez la documentation',
+                    'Testez étape par étape'
+                ]
+            }
+        ]
+
 if __name__ == '__main__':
     init_database()
     app.run(debug=True)
