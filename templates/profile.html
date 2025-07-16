@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block title %}Profil - GeekSite{% endblock %}
+
+{% block content %}
+<div class="hero" style="margin-bottom: 3rem;">
+    <h1><i class="fas fa-user-cog"></i> Configuration du profil</h1>
+    <p>Gérez vos informations personnelles et paramètres de compte</p>
+</div>
+
+<div class="dashboard-grid">
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-user"></i> Informations du compte
+        </div>
+        
+        <form method="POST" style="margin-top: 1rem;">
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-user"></i> Nom d'utilisateur
+                </label>
+                <input type="text" class="form-input" value="{{ user.username }}" readonly>
+                <small style="color: var(--text-gray);">Le nom d'utilisateur ne peut pas être modifié</small>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-envelope"></i> Adresse email
+                </label>
+                <input type="email" class="form-input" value="{{ user.email }}" readonly>
+                <small style="color: var(--text-gray);">Contactez un administrateur pour modifier votre email</small>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-calendar"></i> Membre depuis
+                </label>
+                <input type="text" class="form-input" value="{{ user.created_at.strftime('%d/%m/%Y à %H:%M') }}" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-shield"></i> Type de compte
+                </label>
+                <div style="margin-top: 0.5rem;">
+                    <span class="badge {{ 'badge-admin' if user.is_admin else 'badge-user' }}">
+                        <i class="fas fa-{{ 'crown' if user.is_admin else 'user' }}"></i>
+                        {{ 'Administrateur' if user.is_admin else 'Utilisateur standard' }}
+                    </span>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-lock"></i> Sécurité
+        </div>
+        
+        <div class="code-block" style="margin-bottom: 1rem;">
+            Security Status: <span style="color: var(--text-primary);">SECURE</span><br>
+            Password Hash: SHA-256<br>
+            Session Type: {{ 'Permanent' if session.permanent else 'Temporary' }}<br>
+            Last Login: {{ user.last_login.strftime('%d/%m/%Y %H:%M') if user.last_login else 'N/A' }}
+        </div>
+        
+        <button class="btn btn-secondary" onclick="alert('Fonctionnalité de changement de mot de passe en développement')">
+            <i class="fas fa-key"></i> Changer le mot de passe
+        </button>
+        
+        <button class="btn btn-secondary" onclick="alert('Fonctionnalité en développement')" style="margin-top: 0.5rem;">
+            <i class="fas fa-sign-out-alt"></i> Déconnecter tous les appareils
+        </button>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-chart-bar"></i> Statistiques d'activité
+        </div>
+        
+        <div style="margin: 1rem 0;">
+            <div class="stats-item" style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding: 0.5rem; background: var(--bg-secondary); border-radius: 5px;">
+                <span><i class="fas fa-sign-in-alt"></i> Connexions</span>
+                <strong style="color: var(--text-primary);">{{ '1+' if user.last_login else '0' }}</strong>
+            </div>
+            
+            <div class="stats-item" style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding: 0.5rem; background: var(--bg-secondary); border-radius: 5px;">
+                <span><i class="fas fa-clock"></i> Temps passé</span>
+                <strong style="color: var(--text-primary);">{{ 'Actif' if user.last_login else 'Nouveau' }}</strong>
+            </div>
+            
+            <div class="stats-item" style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding: 0.5rem; background: var(--bg-secondary); border-radius: 5px;">
+                <span><i class="fas fa-calendar"></i> Ancienneté</span>
+                <strong style="color: var(--text-primary);">{{ (moment() - user.created_at).days if user.created_at else 0 }} jours</strong>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-cogs"></i> Préférences
+        </div>
+        
+        <div style="margin: 1rem 0;">
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-palette"></i> Thème
+                </label>
+                <select class="form-input" disabled>
+                    <option selected>Geek Sombre (défaut)</option>
+                    <option>Matrix Green</option>
+                    <option>Cyberpunk Neon</option>
+                </select>
+                <small style="color: var(--text-gray);">Plus de thèmes bientôt disponibles</small>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-language"></i> Langue
+                </label>
+                <select class="form-input" disabled>
+                    <option selected>Français</option>
+                    <option>English</option>
+                    <option>日本語</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-bell"></i> Notifications
+                </label>
+                <div style="margin-top: 0.5rem;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-gray);">
+                        <input type="checkbox" checked disabled> Notifications système
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-gray); margin-top: 0.5rem;">
+                        <input type="checkbox" disabled> Newsletter
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <button class="btn btn-primary" onclick="alert('Paramètres sauvegardés (simulation)')">
+            <i class="fas fa-save"></i> Sauvegarder les préférences
+        </button>
+    </div>
+</div>
+
+<div class="card" style="border-color: #ff4757; margin-top: 2rem;">
+    <div class="card-title" style="color: #ff4757;">
+        <i class="fas fa-exclamation-triangle"></i> Zone de danger
+    </div>
+    
+    <p style="color: var(--text-gray); margin-bottom: 1rem;">
+        Actions irréversibles concernant votre compte. Procédez avec prudence.
+    </p>
+    
+    <div class="code-block" style="margin: 1rem 0;">
+        <span style="color: #ff4757;"># ATTENTION: Actions destructives</span><br>
+        > account.delete() # Suppression définitive<br>
+        > data.export() # Exporter les données<br>
+        > account.suspend() # Suspendre temporairement
+    </div>
+    
+    <div>
+        <button class="btn" style="border-color: var(--text-gray); color: var(--text-gray); margin: 0.5rem;" onclick="alert('Fonctionnalité d\'export en développement')">
+            <i class="fas fa-download"></i> Exporter mes données
+        </button>
+        
+        <button class="btn" style="border-color: #ffa502; color: #ffa502; margin: 0.5rem;" onclick="alert('Fonctionnalité de suspension en développement')">
+            <i class="fas fa-pause"></i> Suspendre mon compte
+        </button>
+        
+        <button class="btn" style="border-color: #ff4757; color: #ff4757; margin: 0.5rem;" onclick="if(confirm('Êtes-vous vraiment sûr de vouloir supprimer votre compte ? Cette action est IRRÉVERSIBLE.')) alert('Fonctionnalité de suppression en développement')">
+            <i class="fas fa-trash"></i> Supprimer mon compte
+        </button>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-terminal"></i> Session actuelle
+    </div>
+    
+    <div class="code-block">
+        Session ID: {{ session.get('_id', 'N/A') }}<br>
+        User Agent: {{ request.headers.get('User-Agent', 'Unknown')[:50] }}...<br>
+        IP Address: {{ request.environ.get('REMOTE_ADDR', 'Unknown') }}<br>
+        Login Time: {{ user.last_login.strftime('%d/%m/%Y %H:%M:%S') if user.last_login else 'N/A' }}<br>
+        Session Type: {{ 'Permanent' if session.permanent else 'Temporary' }}
+    </div>
+    
+    <a href="{{ url_for('logout') }}" class="btn" style="border-color: #ff4757; color: #ff4757; margin-top: 1rem;">
+        <i class="fas fa-sign-out-alt"></i> Terminer la session
+    </a>
+</div>
+
+<style>
+.form-input:disabled {
+    background: var(--bg-primary);
+    color: var(--text-gray);
+    cursor: not-allowed;
+}
+
+.stats-item:hover {
+    background: var(--bg-tertiary) !important;
+    transform: translateX(5px);
+    transition: all 0.3s ease;
+}
+
+input[type="checkbox"] {
+    accent-color: var(--text-primary);
+}
+
+.card:hover {
+    border-color: var(--text-primary);
+    box-shadow: var(--shadow-glow);
+}
+</style>
+{% endblock %}
